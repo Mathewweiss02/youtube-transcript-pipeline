@@ -22,6 +22,8 @@ It is centered on the Python tooling in `yt_processor/` for:
 - the legacy `Howdy/` dump
 - frontend build artifacts and local app dependencies
 - local secrets and editor state
+- archived one-off channel scripts and local research outputs
+- channel-specific inventory dumps, title lists, and generated status files
 
 ## Main Entry Points
 
@@ -38,6 +40,31 @@ It is centered on the Python tooling in `yt_processor/` for:
 - `examples/sample_raw/` for safe raw transcript examples
 - `examples/sample_chunked/` for a safe merged PART example
 - `PUBLIC_RELEASE_RISK_ASSESSMENT.md` for what should and should not be added from the full workspace
+
+## Environment
+
+The core downloader flow expects a working `yt-dlp` executable on the machine.
+
+- the scripts auto-discover `yt-dlp` in common Windows locations
+- optional API work uses values from `.env.example`
+- Python package dependencies for the published repo are listed in `yt_processor/requirements.txt`
+
+## Repository Scope
+
+This repo is intentionally curated around the reusable pipeline.
+
+That means the public-facing shape is:
+
+- generic download / normalize / chunk / scan / audit tooling
+- collection metadata and curated overrides
+- tests and small safe examples
+
+And it intentionally excludes:
+
+- channel-specific scratch scripts
+- manual investigation artifacts
+- local inventory dumps and intermediate reports
+- archived backup scripts kept only for local history
 
 ## Typical Flow
 

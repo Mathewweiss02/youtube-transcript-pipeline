@@ -5,14 +5,18 @@ from __future__ import annotations
 
 import argparse
 import importlib
-import shutil
+import importlib.metadata
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
-from collection_utils import REPO_ROOT, YT_DLP_PATH
-from universal_chunker import chunk_transcripts
+try:
+    from . import collection_utils as cu
+    from .universal_chunker import chunk_transcripts
+except ImportError:
+    import collection_utils as cu
+    from universal_chunker import chunk_transcripts
 
 
 OPTIONAL_PACKAGES = ("openai", "pinecone", "tiktoken", "tenacity")
@@ -21,9 +25,14 @@ OPTIONAL_PACKAGES = ("openai", "pinecone", "tiktoken", "tenacity")
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Validate a local setup for the transcript pipeline repo.")
     parser.add_argument(
+        "--workspace",
+        type=Path,
+        help="Workspace root for transcript data, reports, and pending update files",
+    )
+    parser.add_argument(
         "--create-dirs",
         action="store_true",
-        help="Create missing repo directories such as transcripts/ for first-run setup",
+        help="Create missing workspace directories such as transcripts/ for first-run setup",
     )
     parser.add_argument(
         "--verify-examples",
@@ -38,6 +47,12 @@ def print_result(label: str, ok: bool, detail: str):
     print(f"[{status}] {label}: {detail}")
 
 
+def print_optional(label: str, installed: bool, detail: str):
+    status = "OPTIONAL"
+    suffix = "installed" if installed else "not installed"
+    print(f"[{status}] {label}: {detail} ({suffix})")
+
+
 def check_python() -> bool:
     version = sys.version_info
     ok = version >= (3, 10)
@@ -46,30 +61,71 @@ def check_python() -> bool:
     return ok
 
 
-def check_repo_dirs(create_dirs: bool) -> bool:
-    transcripts_dir = REPO_ROOT / "transcripts"
-    if not transcripts_dir.exists() and create_dirs:
+def check_workspace_root(create_dirs: bool) -> bool:
+    workspace_root = cu.REPO_ROOT
+    runtime_dir = cu.REPORTS_DIR.parent
+    if create_dirs:
+        runtime_dir.mkdir(parents=True, exist_ok=True)
+    ok = workspace_root.exists() and runtime_dir.exists()
+    print_result("Workspace", ok, str(workspace_root))
+    return ok
+
+
+def check_transcripts_dir(create_dirs: bool) -> bool:
+    transcripts_dir = cu.TRANSCRIPTS_ROOT
+    if create_dirs:
         transcripts_dir.mkdir(parents=True, exist_ok=True)
     ok = transcripts_dir.exists()
-    print_result("Repo transcripts dir", ok, str(transcripts_dir))
+    print_result("Workspace transcripts dir", ok, str(transcripts_dir))
     return ok
 
 
 def check_yt_dlp() -> bool:
     try:
+        package_version = importlib.metadata.version("yt-dlp")
+    except importlib.metadata.PackageNotFoundError:
+        package_version = None
+
+    try:
         result = subprocess.run(
-            [YT_DLP_PATH, "--version"],
+            cu.get_yt_dlp_command("--version"),
             capture_output=True,
             text=True,
             timeout=15,
             check=True,
         )
     except Exception as exc:
-        print_result("yt-dlp", False, f"{YT_DLP_PATH} ({exc})")
+        detail = cu.describe_yt_dlp_command()
+        if package_version:
+            detail += f" [package {package_version}]"
+        print_result("yt-dlp", False, f"{detail} ({exc})")
         return False
 
     version = (result.stdout or result.stderr or "").strip().splitlines()[:1]
-    print_result("yt-dlp", True, f"{YT_DLP_PATH} ({version[0] if version else 'version unknown'})")
+    detail = cu.describe_yt_dlp_command()
+    if version:
+        detail += f" ({version[0]})"
+    if package_version:
+        detail += f" [package {package_version}]"
+    print_result("yt-dlp", True, detail)
+    return True
+
+
+def check_write_permissions(create_dirs: bool) -> bool:
+    probe_dir = cu.REPORTS_DIR.parent
+    if create_dirs:
+        probe_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        probe_dir.mkdir(parents=True, exist_ok=True)
+        probe = probe_dir / ".doctor_write_probe"
+        probe.write_text("ok", encoding="utf-8")
+        probe.unlink()
+    except OSError as exc:
+        print_result("Write access", False, f"{probe_dir} ({exc})")
+        return False
+
+    print_result("Write access", True, str(probe_dir))
     return True
 
 
@@ -77,13 +133,13 @@ def check_optional_packages():
     for package in OPTIONAL_PACKAGES:
         try:
             importlib.import_module(package)
-            print_result(f"Optional package `{package}`", True, "installed")
+            print_optional(f"Optional package `{package}`", True, package)
         except Exception:
-            print_result(f"Optional package `{package}`", False, "not installed")
+            print_optional(f"Optional package `{package}`", False, package)
 
 
 def verify_examples() -> bool:
-    sample_raw_dir = REPO_ROOT / "examples" / "sample_raw"
+    sample_raw_dir = cu.get_examples_root() / "sample_raw"
     if not sample_raw_dir.exists():
         print_result("Example chunking", False, f"missing {sample_raw_dir}")
         return False
@@ -103,11 +159,14 @@ def verify_examples() -> bool:
         return ok
 
 
-def main():
+def main() -> int:
     args = parse_args()
+    cu.configure_runtime_root(args.workspace)
     checks = [
         check_python(),
-        check_repo_dirs(create_dirs=args.create_dirs),
+        check_workspace_root(create_dirs=args.create_dirs),
+        check_transcripts_dir(create_dirs=args.create_dirs),
+        check_write_permissions(create_dirs=args.create_dirs),
         check_yt_dlp(),
     ]
 
@@ -119,12 +178,12 @@ def main():
     print()
     if all(checks):
         print("Pipeline doctor passed.")
-        print("Next step: run universal_parallel_downloader.py with --channel-url.")
-        raise SystemExit(0)
+        print("Next step: run yt-pipeline-download --channel-url https://www.youtube.com/@ChannelHandle")
+        return 0
 
     print("Pipeline doctor found setup issues.")
-    raise SystemExit(1)
+    return 1
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

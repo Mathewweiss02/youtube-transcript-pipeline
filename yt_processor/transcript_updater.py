@@ -3,22 +3,19 @@
 
 from __future__ import annotations
 
+import argparse
+import re
+import subprocess
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 
-from collection_utils import (
-    MAX_CHUNK_SIZE,
-    PENDING_PATH,
-    REPO_ROOT,
-    YT_DLP_PATH,
-    load_collection_registry,
-    load_json,
-    resolve_collection_raw_dir,
-    save_json,
-)
+try:
+    from . import collection_utils as cu
+except ImportError:
+    import collection_utils as cu
 
 try:
     sys.stdout.reconfigure(encoding="utf-8")
@@ -26,12 +23,21 @@ try:
 except Exception:
     pass
 
-import os
-import re
-import subprocess
-
 
 WORKERS = 10
+TEMP_PREFIX = "__tmp_transcript__"
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Update append-safe transcript collections from pending scan results.")
+    parser.add_argument("collections", nargs="*", help="Optional collection keys to update")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would be downloaded without mutating files")
+    parser.add_argument(
+        "--workspace",
+        type=Path,
+        help="Workspace root for transcript data, reports, and pending update files",
+    )
+    return parser.parse_args()
 
 
 def clean_vtt_file(vtt_path: Path) -> str:
@@ -57,31 +63,29 @@ def clean_vtt_file(vtt_path: Path) -> str:
     return "\n".join(cleaned_lines)
 
 
+def cleanup_temp_files(output_dir: Path, video_id: str):
+    for temp_path in output_dir.glob(f"{TEMP_PREFIX}{video_id}*"):
+        try:
+            temp_path.unlink()
+        except OSError:
+            pass
+
+
 def download_single_transcript(video_data: dict, output_dir: Path) -> dict:
     video_id = video_data["id"]
     title = video_data["title"]
     url = video_data["url"]
 
-    for ext in [".en.vtt", ".vtt", ".md"]:
-        path = output_dir / f"{video_id}{ext}"
-        if path.exists():
-            try:
-                path.unlink()
-            except Exception:
-                pass
-
     for attempt in range(3):
         try:
-            for part_file in output_dir.glob(f"{video_id}.*.part"):
-                part_file.unlink()
+            cleanup_temp_files(output_dir, video_id)
             break
         except Exception:
             if attempt < 2:
                 time.sleep(1)
 
-    temp_template = output_dir / f"{video_id}.%(ext)s"
-    cmd = [
-        YT_DLP_PATH,
+    temp_template = output_dir / f"{TEMP_PREFIX}{video_id}.%(ext)s"
+    cmd = cu.get_yt_dlp_command(
         "--write-auto-sub",
         "--sub-langs",
         "en",
@@ -90,31 +94,38 @@ def download_single_transcript(video_data: dict, output_dir: Path) -> dict:
         str(temp_template),
         "--no-warnings",
         url,
-    ]
+    )
 
     try:
         subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=60)
     except subprocess.TimeoutExpired:
+        cleanup_temp_files(output_dir, video_id)
         return {"id": video_id, "title": title, "status": "TIMEOUT", "file": None}
     except subprocess.CalledProcessError:
+        cleanup_temp_files(output_dir, video_id)
         return {"id": video_id, "title": title, "status": "FAILED", "file": None}
 
-    vtt_files = list(output_dir.glob(f"{video_id}*.vtt"))
+    vtt_files = list(output_dir.glob(f"{TEMP_PREFIX}{video_id}*.vtt"))
     if not vtt_files:
+        cleanup_temp_files(output_dir, video_id)
         return {"id": video_id, "title": title, "status": "NO_SUBS", "file": None}
 
     vtt_path = vtt_files[0]
     try:
         cleaned_text = clean_vtt_file(vtt_path)
-        md_path = output_dir / f"{video_id}.md"
-        with open(md_path, "w", encoding="utf-8") as f:
+        temp_md_path = output_dir / f"{TEMP_PREFIX}{video_id}.md"
+        final_md_path = output_dir / f"{video_id}.md"
+        with open(temp_md_path, "w", encoding="utf-8") as f:
             f.write(f"# {title}\n\n")
             f.write(f"URL: {url}\n\n")
             f.write("---\n\n")
             f.write(cleaned_text)
-        vtt_path.unlink()
-        return {"id": video_id, "title": title, "status": "SUCCESS", "file": str(md_path)}
+            f.write("\n")
+        temp_md_path.replace(final_md_path)
+        cleanup_temp_files(output_dir, video_id)
+        return {"id": video_id, "title": title, "status": "SUCCESS", "file": str(final_md_path)}
     except Exception as exc:
+        cleanup_temp_files(output_dir, video_id)
         return {"id": video_id, "title": title, "status": "ERROR", "file": None, "error": str(exc)[:100]}
 
 
@@ -237,7 +248,7 @@ def append_to_chunks(
         candidate_body = (current_body + section).strip()
         candidate_document = render_chunk_document(current_chunk_title, candidate_body)
 
-        if len(candidate_document.encode("utf-8")) > MAX_CHUNK_SIZE and current_body.strip():
+        if len(candidate_document.encode("utf-8")) > cu.MAX_CHUNK_SIZE and current_body.strip():
             write_chunk_document(current_chunk_path, current_chunk_title, current_body)
             current_chunk_num += 1
             new_chunks += 1
@@ -261,7 +272,7 @@ def append_to_chunks(
 
 
 def load_pending() -> dict:
-    payload = load_json(PENDING_PATH, default={})
+    payload = cu.load_json(cu.PENDING_PATH, default={})
     payload.setdefault("collections", {})
     payload.setdefault("channels", {})
     return payload
@@ -322,7 +333,7 @@ def update_collection(collection_key: str, collection: dict, pending: dict, dry_
         result["dry_run"] = True
         return result
 
-    raw_dir = resolve_collection_raw_dir(collection)
+    raw_dir = cu.resolve_collection_raw_dir(collection)
     if raw_dir is None:
         print(f"  ERROR: No raw_dir configured for {collection_key}")
         return result
@@ -350,8 +361,11 @@ def update_collection(collection_key: str, collection: dict, pending: dict, dry_
         print("  No transcripts downloaded. Skipping append step.")
         return result
 
+    successful_by_id = {item["id"]: item for item in successful}
+    successful = [successful_by_id[video["id"]] for video in new_videos if video["id"] in successful_by_id]
+
     print("  [2/2] Appending to canonical chunk files...")
-    transcript_dir = REPO_ROOT / collection["transcript_dir"]
+    transcript_dir = cu.resolve_collection_transcript_dir(collection)
     appended, new_chunks = append_to_chunks(
         transcript_dir=transcript_dir,
         chunk_pattern=collection.get("chunk_pattern", "*.md"),
@@ -375,33 +389,34 @@ def update_collection(collection_key: str, collection: dict, pending: dict, dry_
     return result
 
 
-def main():
-    collections = load_collection_registry()
+def main() -> int:
+    args = parse_args()
+    cu.configure_runtime_root(args.workspace)
+    collections = cu.load_collection_registry()
     pending = load_pending()
 
     if not pending.get("collections"):
         print("No collection-oriented pending updates found. Run transcript_scanner.py first.")
-        return
+        return 1
 
-    args = [value for value in sys.argv[1:] if not value.startswith("--")]
-    dry_run = "--dry-run" in sys.argv[1:]
-    targets = resolve_targets(args, collections, pending)
+    targets = resolve_targets(args.collections, collections, pending)
     if not targets:
         print("No append-safe collections with pending updates.")
-        return
+        return 1
 
     print("=" * 78)
     print("  TRANSCRIPT COLLECTION UPDATER")
-    if dry_run:
+    if args.dry_run:
         print("  MODE: DRY RUN")
     print(f"  Collections: {len(targets)}")
-    print(f"  Using yt-dlp: {YT_DLP_PATH}")
+    print(f"  Workspace: {cu.REPO_ROOT}")
+    print(f"  Using yt-dlp: {cu.describe_yt_dlp_command()}")
     print("=" * 78)
 
     start = time.time()
     results = []
     for collection_key, collection in targets.items():
-        results.append(update_collection(collection_key, collection, pending, dry_run=dry_run))
+        results.append(update_collection(collection_key, collection, pending, dry_run=args.dry_run))
 
     elapsed = time.time() - start
     total_downloaded = sum(item["downloaded"] for item in results)
@@ -414,10 +429,12 @@ def main():
     print(f"  Downloaded: {total_downloaded} | Failed: {total_failed} | Appended: {total_appended}")
     print(f"  Time: {elapsed:.1f}s")
 
-    if not dry_run:
-        save_json(PENDING_PATH, pending)
-        print(f"  Updated pending log: {PENDING_PATH}")
+    if not args.dry_run:
+        cu.save_json(cu.PENDING_PATH, pending)
+        print(f"  Updated pending log: {cu.PENDING_PATH}")
+
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

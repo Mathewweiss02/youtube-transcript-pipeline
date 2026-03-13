@@ -3,24 +3,16 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import time
 from datetime import datetime, timezone
 
-from collection_utils import (
-    PENDING_PATH,
-    YT_DLP_PATH,
-    extract_candidates_from_bundle,
-    fetch_channel_videos,
-    load_collection_overrides,
-    load_collection_registry,
-    load_json,
-    resolve_canonical_source_files,
-    resolve_manifest_path,
-    save_json,
-    unique_entries_by_video,
-)
+try:
+    from . import collection_utils as cu
+except ImportError:
+    import collection_utils as cu
 
 try:
     sys.stdout.reconfigure(encoding="utf-8")
@@ -32,13 +24,25 @@ except Exception:
 SCHEMA_VERSION = 2
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Scan transcript collections against live channel inventories.")
+    parser.add_argument("collections", nargs="*", help="Optional collection keys to scan")
+    parser.add_argument("--report", action="store_true", help="Print the last saved scan report")
+    parser.add_argument(
+        "--workspace",
+        type=str,
+        help="Workspace root for transcript data, pending updates, and collection-relative paths",
+    )
+    return parser.parse_args()
+
+
 def load_pending() -> dict:
     default = {"schema_version": SCHEMA_VERSION, "last_scan": None, "collections": {}, "channels": {}}
-    if not PENDING_PATH.exists():
+    if not cu.PENDING_PATH.exists():
         return default
 
     try:
-        payload = load_json(PENDING_PATH, default=default)
+        payload = cu.load_json(cu.PENDING_PATH, default=default)
     except json.JSONDecodeError:
         return default
 
@@ -101,8 +105,8 @@ def scan_inline_collection(collection_key: str, collection: dict) -> dict:
     result = _base_result(collection_key, collection)
     source_channels = collection.get("source_channels", [])
     source_key = source_channels[0].get("key", "") if source_channels else ""
-    overrides = load_collection_overrides(collection_key)
-    canonical_files = resolve_canonical_source_files(collection)
+    overrides = cu.load_collection_overrides(collection_key)
+    canonical_files = cu.resolve_canonical_source_files(collection)
 
     indexed_entries = []
     indexed_ids: set[str] = set()
@@ -113,7 +117,7 @@ def scan_inline_collection(collection_key: str, collection: dict) -> dict:
         return result
 
     for file_path in canonical_files:
-        for candidate in extract_candidates_from_bundle(file_path, overrides.get("ignored_titles", [])):
+        for candidate in cu.extract_candidates_from_bundle(file_path, overrides.get("ignored_titles", [])):
             indexed_entries.append(
                 {
                     "video_id": candidate.get("video_id", ""),
@@ -126,10 +130,10 @@ def scan_inline_collection(collection_key: str, collection: dict) -> dict:
             if candidate.get("normalized_title"):
                 indexed_titles.add(candidate["normalized_title"])
 
-    unique_indexed = unique_entries_by_video(indexed_entries)
+    unique_indexed = cu.unique_entries_by_video(indexed_entries)
     live_videos = []
     if source_channels:
-        live_videos = fetch_channel_videos(source_channels[0].get("youtube_url", ""))
+        live_videos = cu.fetch_channel_videos(source_channels[0].get("youtube_url", ""))
     else:
         result["scan_notes"].append("No live source channel configured for inline scan.")
 
@@ -176,13 +180,13 @@ def scan_inline_collection(collection_key: str, collection: dict) -> dict:
 
 def scan_manifest_collection(collection_key: str, collection: dict) -> dict:
     result = _base_result(collection_key, collection)
-    manifest_path = resolve_manifest_path(collection)
+    manifest_path = cu.resolve_manifest_source_path(collection)
     if not manifest_path.exists():
         result["scan_notes"].append(f"Manifest missing: {manifest_path}")
         return result
 
-    manifest = load_json(manifest_path, default={})
-    manifest_entries = unique_entries_by_video(manifest.get("entries", []))
+    manifest = cu.load_json(manifest_path, default={})
+    manifest_entries = cu.unique_entries_by_video(manifest.get("entries", []))
     manifest_stats = manifest.get("stats", {})
 
     indexed_ids = {entry["video_id"] for entry in manifest_entries if entry.get("video_id")}
@@ -212,7 +216,7 @@ def scan_manifest_collection(collection_key: str, collection: dict) -> dict:
             )
             continue
 
-        live_videos = fetch_channel_videos(youtube_url)
+        live_videos = cu.fetch_channel_videos(youtube_url)
         total_on_sources += len(live_videos)
         source_new = []
         for video in live_videos:
@@ -322,13 +326,13 @@ def print_report(pending: dict):
     print("=" * 78)
 
 
-def resolve_targets(argv: list[str], collections: dict[str, dict]) -> dict[str, dict]:
-    if not argv:
+def resolve_targets(selected: list[str], collections: dict[str, dict]) -> dict[str, dict]:
+    if not selected:
         return dict(collections)
 
     targets: dict[str, dict] = {}
     lower_map = {key.lower(): key for key in collections}
-    for value in argv:
+    for value in selected:
         key = collections.get(value)
         if key:
             targets[value] = collections[value]
@@ -343,25 +347,26 @@ def resolve_targets(argv: list[str], collections: dict[str, dict]) -> dict[str, 
     return targets
 
 
-def main():
-    collections = load_collection_registry()
-    args = sys.argv[1:]
+def main() -> int:
+    args = parse_args()
+    cu.configure_runtime_root(args.workspace)
+    collections = cu.load_collection_registry()
 
-    if "--report" in args:
+    if args.report:
         pending = load_pending()
         print_report(pending)
-        return
+        return 0
 
-    raw_targets = [arg for arg in args if not arg.startswith("--")]
-    targets = resolve_targets(raw_targets, collections)
+    targets = resolve_targets(args.collections, collections)
     if not targets:
         print("No collections selected.")
-        return
+        return 1
 
     print("=" * 78)
     print("  TRANSCRIPT COLLECTION SCANNER")
     print(f"  Collections: {len(targets)}")
-    print(f"  Using yt-dlp: {YT_DLP_PATH}")
+    print(f"  Workspace: {cu.REPO_ROOT}")
+    print(f"  Using yt-dlp: {cu.describe_yt_dlp_command()}")
     print("=" * 78)
 
     pending = load_pending()
@@ -374,7 +379,7 @@ def main():
     }
 
     start = time.time()
-    if raw_targets:
+    if args.collections:
         new_collection_payload = dict(pending["collections"])
         compat_channels = dict(pending["channels"])
     else:
@@ -394,13 +399,14 @@ def main():
     pending["collections"] = new_collection_payload
     pending["channels"] = compat_channels
     pending["last_scan"] = datetime.now(timezone.utc).isoformat()
-    save_json(PENDING_PATH, pending)
+    cu.save_json(cu.PENDING_PATH, pending)
 
     elapsed = time.time() - start
     print(f"\n  Scan completed in {elapsed:.1f}s")
-    print(f"  Results saved to: {PENDING_PATH}")
+    print(f"  Results saved to: {cu.PENDING_PATH}")
     print_report(pending)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "youtube-transcript-pipeline"
+version = "0.2.0"
+description = "CLI tools for downloading, normalizing, chunking, scanning, and auditing YouTube transcript collections."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+  { name = "Mathew Weiss" },
+]
+keywords = ["youtube", "transcripts", "yt-dlp", "cli", "pipeline"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Multimedia :: Video",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Utilities",
+]
+dependencies = [
+  "platformdirs>=4.0",
+  "yt-dlp[default]>=2025.1.15",
+]
+
+[project.optional-dependencies]
+vector = [
+  "openai",
+  "pinecone",
+  "tiktoken",
+  "tenacity",
+]
+dev = [
+  "build>=1.2.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/Mathewweiss02/youtube-transcript-pipeline"
+Repository = "https://github.com/Mathewweiss02/youtube-transcript-pipeline"
+Issues = "https://github.com/Mathewweiss02/youtube-transcript-pipeline/issues"
+
+[project.scripts]
+yt-pipeline-download = "yt_processor.universal_parallel_downloader:main"
+yt-pipeline-chunk = "yt_processor.universal_chunker:main"
+yt-pipeline-normalize = "yt_processor.normalize_raw_transcripts:main"
+yt-pipeline-scan = "yt_processor.transcript_scanner:main"
+yt-pipeline-update = "yt_processor.transcript_updater:main"
+yt-pipeline-audit = "yt_processor.audit_transcript_collections:main"
+yt-pipeline-doctor = "yt_processor.pipeline_doctor:main"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["yt_processor"]
+namespaces = false
+
+[tool.setuptools.package-data]
+yt_processor = [
+  "channel_registry.json",
+  "collection_registry.json",
+  "examples/sample_chunked/*.md",
+  "examples/sample_raw/*.md",
+  "provenance_manifests/*.json",
+  "provenance_overrides/*.json",
+]

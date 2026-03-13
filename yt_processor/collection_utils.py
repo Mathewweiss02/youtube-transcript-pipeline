@@ -7,6 +7,7 @@ import fnmatch
 import functools
 import glob
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -17,6 +18,11 @@ from pathlib import Path
 from typing import Iterable
 
 try:
+    from platformdirs import user_data_dir
+except Exception:
+    user_data_dir = None
+
+try:
     sys.stdout.reconfigure(encoding="utf-8")
     sys.stderr.reconfigure(encoding="utf-8")
 except Exception:
@@ -24,15 +30,14 @@ except Exception:
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-REPO_ROOT = SCRIPT_DIR.parent
-TRANSCRIPTS_ROOT = REPO_ROOT / "transcripts"
-COLLECTION_REGISTRY_PATH = SCRIPT_DIR / "collection_registry.json"
-LEGACY_REGISTRY_PATH = SCRIPT_DIR / "channel_registry.json"
-PENDING_PATH = SCRIPT_DIR / "pending_updates.json"
-PROVENANCE_DIR = SCRIPT_DIR / "provenance_manifests"
-OVERRIDES_DIR = SCRIPT_DIR / "provenance_overrides"
-REPORTS_DIR = SCRIPT_DIR / "reports"
-APP_SIDECAR_PATH = REPO_ROOT / "youtuber wiki apps" / "my-app" / "data" / "transcript-video-sidecars.json"
+PACKAGE_ROOT = SCRIPT_DIR.parent
+BUNDLED_COLLECTION_REGISTRY_PATH = SCRIPT_DIR / "collection_registry.json"
+BUNDLED_LEGACY_REGISTRY_PATH = SCRIPT_DIR / "channel_registry.json"
+BUNDLED_PROVENANCE_DIR = SCRIPT_DIR / "provenance_manifests"
+BUNDLED_OVERRIDES_DIR = SCRIPT_DIR / "provenance_overrides"
+BUNDLED_EXAMPLES_DIR = SCRIPT_DIR / "examples"
+APP_NAME = "youtube-transcript-pipeline"
+WORKSPACE_ENV_VARS = ("YTP_WORKSPACE", "YOUTUBE_TRANSCRIPT_PIPELINE_WORKSPACE")
 MAX_CHUNK_SIZE = int(2.4 * 1024 * 1024)
 
 URL_RE = re.compile(r"https?://(?:www\.)?youtube\.com/watch\?v=([A-Za-z0-9_-]{11})")
@@ -51,6 +56,10 @@ BAR_VARIANTS = r"[\u007c\uff5c]"
 
 
 def _find_yt_dlp() -> str:
+    env_path = os.environ.get("YT_DLP_PATH")
+    if env_path:
+        return env_path
+
     base_dir = "C:/yt-dlp"
     try:
         if os.path.isdir(base_dir):
@@ -75,17 +84,120 @@ def _find_yt_dlp() -> str:
             if os.path.exists(winget_exe):
                 return winget_exe
 
-    env_path = os.environ.get("YT_DLP_PATH")
-    if env_path:
-        return env_path
-
     return "yt-dlp"
 
 
 YT_DLP_PATH = _find_yt_dlp()
+YT_DLP_MODULE_AVAILABLE = importlib.util.find_spec("yt_dlp") is not None
+
+
+def _fallback_user_data_dir(app_name: str) -> Path:
+    home = Path.home()
+    if sys.platform == "win32":
+        base = Path(os.environ.get("LOCALAPPDATA") or os.environ.get("APPDATA") or (home / "AppData" / "Local"))
+    elif sys.platform == "darwin":
+        base = home / "Library" / "Application Support"
+    else:
+        base = Path(os.environ.get("XDG_DATA_HOME") or (home / ".local" / "share"))
+    return base / app_name
+
+
+def _looks_like_repo_checkout(path: Path) -> bool:
+    return (
+        (path / ".git").exists()
+        and (path / "yt_processor" / "collection_registry.json").exists()
+        and (path / "README.md").exists()
+    )
+
+
+def _is_writable_dir(path: Path) -> bool:
+    try:
+        path.mkdir(parents=True, exist_ok=True)
+        probe = path / ".write_probe"
+        probe.write_text("ok", encoding="utf-8")
+        probe.unlink()
+        return True
+    except OSError:
+        return False
+
+
+def _default_workspace_root() -> Path:
+    for env_name in WORKSPACE_ENV_VARS:
+        value = os.environ.get(env_name)
+        if value:
+            return Path(value).expanduser().resolve()
+
+    if _looks_like_repo_checkout(PACKAGE_ROOT) and _is_writable_dir(PACKAGE_ROOT):
+        return PACKAGE_ROOT
+
+    current_dir = Path.cwd().resolve()
+    if _looks_like_repo_checkout(current_dir) and _is_writable_dir(current_dir):
+        return current_dir
+
+    if user_data_dir is not None:
+        try:
+            return Path(user_data_dir(APP_NAME)).resolve()
+        except Exception:
+            pass
+
+    return _fallback_user_data_dir(APP_NAME).resolve()
+
+
+def configure_runtime_root(workspace: str | Path | None = None) -> Path:
+    root = _default_workspace_root() if workspace is None else Path(workspace).expanduser().resolve()
+
+    globals()["WORKSPACE_ROOT"] = root
+    globals()["REPO_ROOT"] = root
+    globals()["TRANSCRIPTS_ROOT"] = root / "transcripts"
+    globals()["RUNTIME_YT_PROCESSOR_DIR"] = root / "yt_processor"
+    globals()["PENDING_PATH"] = globals()["RUNTIME_YT_PROCESSOR_DIR"] / "pending_updates.json"
+    globals()["PROVENANCE_DIR"] = globals()["RUNTIME_YT_PROCESSOR_DIR"] / "provenance_manifests"
+    globals()["OVERRIDES_DIR"] = globals()["RUNTIME_YT_PROCESSOR_DIR"] / "provenance_overrides"
+    globals()["REPORTS_DIR"] = globals()["RUNTIME_YT_PROCESSOR_DIR"] / "reports"
+    globals()["APP_SIDECAR_PATH"] = (
+        root / "youtuber wiki apps" / "my-app" / "data" / "transcript-video-sidecars.json"
+    )
+    return root
+
+
+configure_runtime_root()
+COLLECTION_REGISTRY_PATH = BUNDLED_COLLECTION_REGISTRY_PATH
+LEGACY_REGISTRY_PATH = BUNDLED_LEGACY_REGISTRY_PATH
+
+
+def get_examples_root() -> Path:
+    repo_examples = REPO_ROOT / "examples"
+    if repo_examples.exists():
+        return repo_examples
+    return BUNDLED_EXAMPLES_DIR
+
+
+def get_yt_dlp_command(*extra_args: str) -> list[str]:
+    if os.environ.get("YT_DLP_PATH"):
+        return [YT_DLP_PATH, *extra_args]
+    if os.path.isabs(YT_DLP_PATH) and os.path.exists(YT_DLP_PATH):
+        return [YT_DLP_PATH, *extra_args]
+    if YT_DLP_MODULE_AVAILABLE:
+        return [sys.executable, "-m", "yt_dlp", *extra_args]
+    return [YT_DLP_PATH, *extra_args]
+
+
+def describe_yt_dlp_command() -> str:
+    return " ".join(get_yt_dlp_command())
+
+
+def display_path(path: Path) -> str:
+    resolved = path.resolve()
+    for base in (REPO_ROOT, PACKAGE_ROOT):
+        try:
+            return str(resolved.relative_to(base.resolve()))
+        except ValueError:
+            continue
+    return str(resolved)
 
 
 def ensure_output_dirs():
+    TRANSCRIPTS_ROOT.mkdir(parents=True, exist_ok=True)
     PROVENANCE_DIR.mkdir(parents=True, exist_ok=True)
     OVERRIDES_DIR.mkdir(parents=True, exist_ok=True)
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -120,7 +232,6 @@ def load_legacy_registry() -> dict[str, dict]:
 
 
 def load_collection_overrides(collection_key: str) -> dict:
-    path = OVERRIDES_DIR / f"{collection_key}.json"
     default = {
         "ignored_files": [],
         "ignored_titles": [],
@@ -128,10 +239,13 @@ def load_collection_overrides(collection_key: str) -> dict:
         "entries": {},
         "manual_notes": [],
     }
-    if not path.exists():
-        return default
-
-    payload = load_json(path, default=default)
+    payload = dict(default)
+    bundled_path = BUNDLED_OVERRIDES_DIR / f"{collection_key}.json"
+    runtime_path = OVERRIDES_DIR / f"{collection_key}.json"
+    if bundled_path.exists():
+        payload.update(load_json(bundled_path, default=default))
+    if runtime_path.exists():
+        payload.update(load_json(runtime_path, default=default))
     for key, value in default.items():
         payload.setdefault(key, value)
     return payload
@@ -139,6 +253,10 @@ def load_collection_overrides(collection_key: str) -> dict:
 
 def resolve_repo_path(path_value: str) -> Path:
     return (REPO_ROOT / path_value).resolve()
+
+
+def resolve_bundled_repo_path(path_value: str) -> Path:
+    return (PACKAGE_ROOT / path_value).resolve()
 
 
 def resolve_collection_transcript_dir(collection: dict) -> Path:
@@ -154,6 +272,18 @@ def resolve_collection_raw_dir(collection: dict) -> Path | None:
 
 def resolve_manifest_path(collection: dict) -> Path:
     return resolve_repo_path(collection["provenance_manifest"])
+
+
+def resolve_manifest_source_path(collection: dict) -> Path:
+    runtime_path = resolve_manifest_path(collection)
+    if runtime_path.exists():
+        return runtime_path
+
+    bundled_path = resolve_bundled_repo_path(collection["provenance_manifest"])
+    if bundled_path.exists():
+        return bundled_path
+
+    return runtime_path
 
 
 def clean_title(value: str) -> str:
@@ -211,17 +341,9 @@ def fetch_channel_videos(channel_url: str) -> list[dict]:
     if not channel_url:
         return []
 
-    cmd = [
-        YT_DLP_PATH,
-        "--flat-playlist",
-        "--dump-single-json",
-        "--no-warnings",
-        build_channel_video_url(channel_url),
-    ]
-
     try:
         result = subprocess.run(
-            cmd,
+            get_yt_dlp_command("--flat-playlist", "--dump-single-json", "--no-warnings", build_channel_video_url(channel_url)),
             capture_output=True,
             text=True,
             encoding="utf-8",
@@ -236,7 +358,7 @@ def fetch_channel_videos(channel_url: str) -> list[dict]:
     if payload.get("_type") == "url" and payload.get("url"):
         try:
             result = subprocess.run(
-                [YT_DLP_PATH, "--flat-playlist", "--dump-single-json", "--no-warnings", payload["url"]],
+                get_yt_dlp_command("--flat-playlist", "--dump-single-json", "--no-warnings", payload["url"]),
                 capture_output=True,
                 text=True,
                 encoding="utf-8",
@@ -534,7 +656,7 @@ def build_bundle_records(collection: dict, overrides: dict) -> list[dict]:
         source_keys = override.get("source_channel_keys") or default_source_keys
         bundle_records.append(
             {
-                "path": str(path.relative_to(REPO_ROOT)),
+                "path": display_path(path),
                 "sha256": compute_sha256(path),
                 "size_bytes": path.stat().st_size,
                 "bundle_role": classify_bundle_role(path.name, collection, overrides),

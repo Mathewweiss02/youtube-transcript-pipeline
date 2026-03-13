@@ -1,84 +1,119 @@
 # Getting Started
 
-This is the fastest path for a new user who wants to use the public pipeline repo.
+This is the canonical first-run path for a fresh clone of the public pipeline repo.
 
 ## 1. Install prerequisites
 
-- Python 3.11+
-- a working `yt-dlp` executable
+- Python 3.10+
+- internet access for `yt-dlp`
 
-The scripts try to auto-discover `yt-dlp`, but having it on `PATH` is the easiest setup.
+`yt-dlp` is installed as a Python dependency for this package. You do not need to install it separately unless you want to override it.
 
-## 2. Bootstrap the repo
+## 2. Clone the repo
 
-The fastest Windows path is:
+```bash
+git clone https://github.com/Mathewweiss02/youtube-transcript-pipeline.git
+cd youtube-transcript-pipeline
+```
+
+## 3. Run the bootstrap script
+
+Windows:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\bootstrap.ps1
 ```
 
-That will:
+macOS / Linux:
 
-- install Python dependencies
-- create the local `transcripts/` directory if needed
-- run a first-run environment check
-
-You can also run the doctor directly:
-
-```powershell
-python yt_processor\pipeline_doctor.py --create-dirs --verify-examples
+```bash
+bash ./bootstrap.sh
 ```
 
-## 3. Install Python dependencies manually
+The bootstrap script:
 
-From the repo root:
+- creates a local `.venv`
+- upgrades `pip` inside that environment
+- installs the repo in editable mode
+- runs `yt-pipeline-doctor --create-dirs --verify-examples`
+
+## 4. Activate the virtual environment
+
+Windows:
 
 ```powershell
-pip install -r yt_processor\requirements.txt
+.\.venv\Scripts\Activate.ps1
 ```
 
-## 4. Download transcripts for a channel
+macOS / Linux:
 
-```powershell
-python yt_processor\universal_parallel_downloader.py --channel-url https://www.youtube.com/@ChannelHandle
+```bash
+source .venv/bin/activate
 ```
 
-This writes raw transcript markdown files into a `_Raw` folder under `transcripts/`.
+## 5. Download transcripts for a channel
 
-## 5. Download and rebuild merged PART files
+```bash
+yt-pipeline-download --channel-url https://www.youtube.com/@ChannelHandle
+```
 
-```powershell
-python yt_processor\universal_parallel_downloader.py --channel-url https://www.youtube.com/@ChannelHandle --sync-chunks
+That writes raw transcript markdown files into a `_Raw` folder under the active workspace.
+
+## 6. Download and rebuild merged PART files
+
+```bash
+yt-pipeline-download --channel-url https://www.youtube.com/@ChannelHandle --sync-chunks
 ```
 
 This does both:
 
 - download raw transcripts
-- rebuild the merged PART files from the raw folder
+- rebuild merged PART files from the raw folder
 
-## 6. Normalize an older raw folder
+## 7. Other common commands
 
-If a raw folder contains old title-based filenames instead of canonical video ID filenames:
+Normalize a legacy raw folder:
 
-```powershell
-python yt_processor\normalize_raw_transcripts.py --input-dir transcripts\Some_Channel_Raw
+```bash
+yt-pipeline-normalize --input-dir transcripts/Some_Channel_Raw
 ```
 
-## 7. Audit collection health
+Audit collection health:
 
-```powershell
-python yt_processor\audit_transcript_collections.py
+```bash
+yt-pipeline-audit
 ```
 
-This writes:
+Scan collections against live channels:
 
-- `yt_processor/reports/collection_audit.json`
-- `yt_processor/reports/collection_audit.md`
+```bash
+yt-pipeline-scan
+```
 
-## 8. Optional API setup
+Update append-safe collections from the pending scan results:
 
-If you want embedding and downstream vector workflows, start from:
+```bash
+yt-pipeline-update
+```
 
-- `.env.example`
+## 8. Workspace control
 
-The basic downloader / chunker flow does not require API keys.
+By default:
+
+- a source checkout uses the repo itself as the workspace
+- an installed environment outside a checkout uses a user-writable app data directory
+
+Override that with either:
+
+- `--workspace /path/to/workspace`
+- `YTP_WORKSPACE=/path/to/workspace`
+
+## 9. Optional vector/embedding extras
+
+If you want the OpenAI / Pinecone parts of the broader pipeline:
+
+```bash
+python -m pip install -e .[vector]
+```
+
+Then configure values from `.env.example`.

@@ -1,0 +1,15 @@
+include CHANGELOG.md
+include GETTING_STARTED.md
+include LICENSE
+include README.md
+exclude yt_processor/*.json
+exclude yt_processor/*.md
+recursive-exclude yt_processor/legacy_scripts_backup *
+recursive-exclude yt_processor/notebooklm_bundles *
+recursive-exclude yt_processor/reports *
+include yt_processor/channel_registry.json
+include yt_processor/collection_registry.json
+recursive-include yt_processor/examples *.md
+recursive-include yt_processor/provenance_manifests *.json
+recursive-include yt_processor/provenance_overrides *.json
+recursive-include yt_processor/tests *.py

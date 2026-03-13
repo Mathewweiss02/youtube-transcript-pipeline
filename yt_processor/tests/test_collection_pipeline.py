@@ -4,22 +4,22 @@ import unittest
 from pathlib import Path
 
 
-YT_PROCESSOR_DIR = Path(__file__).resolve().parents[1]
-if str(YT_PROCESSOR_DIR) not in sys.path:
-    sys.path.insert(0, str(YT_PROCESSOR_DIR))
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
-from collection_utils import extract_candidates_from_bundle, load_collection_registry, normalize_title, unique_entries_by_video
-from normalize_raw_transcripts import normalize_raw_transcripts
-from transcript_scanner import scan_manual_collection
-from universal_chunker import chunk_transcripts
-from universal_parallel_downloader import discover_existing_transcripts, download_video, resolve_output_dir
+from yt_processor import collection_utils as cu
+from yt_processor.normalize_raw_transcripts import normalize_raw_transcripts
+from yt_processor.transcript_scanner import scan_manual_collection
+from yt_processor.universal_chunker import chunk_transcripts
+from yt_processor.universal_parallel_downloader import discover_existing_transcripts, download_video, resolve_output_dir
 
 
 class CollectionPipelineTests(unittest.TestCase):
     def test_normalize_title_strips_numbering_and_suffix(self):
         value = "1. Optimize Your Workspace for Productivity, Focus & Creativity | Huberman Lab Essentials.en"
         self.assertEqual(
-            normalize_title(value),
+            cu.normalize_title(value),
             "optimize-your-workspace-for-productivity-focus-and-creativity-huberman-lab-essentials",
         )
 
@@ -42,7 +42,7 @@ Transcript body.
         with tempfile.TemporaryDirectory() as tmp_dir:
             path = Path(tmp_dir) / "bundle.md"
             path.write_text(content, encoding="utf-8")
-            candidates = extract_candidates_from_bundle(path)
+            candidates = cu.extract_candidates_from_bundle(path)
 
         self.assertEqual(len(candidates), 1)
         self.assertEqual(
@@ -64,7 +64,7 @@ Transcript body.
         with tempfile.TemporaryDirectory() as tmp_dir:
             path = Path(tmp_dir) / "bundle.md"
             path.write_text(content, encoding="utf-8")
-            candidates = extract_candidates_from_bundle(path, ignored_titles=["Muay Thai Basics"])
+            candidates = cu.extract_candidates_from_bundle(path, ignored_titles=["Muay Thai Basics"])
 
         by_id = {candidate["video_id"]: candidate for candidate in candidates}
         self.assertEqual(set(by_id), {"zLkSGcUFdjk", "RTuNMVIdonE"})
@@ -92,7 +92,7 @@ Transcript body.
         with tempfile.TemporaryDirectory() as tmp_dir:
             path = Path(tmp_dir) / "bundle.md"
             path.write_text(content, encoding="utf-8")
-            candidates = extract_candidates_from_bundle(path)
+            candidates = cu.extract_candidates_from_bundle(path)
 
         self.assertEqual(len(candidates), 1)
         self.assertEqual(
@@ -129,11 +129,11 @@ Transcript body.
             },
         ]
 
-        unique_entries = unique_entries_by_video(entries)
+        unique_entries = cu.unique_entries_by_video(entries)
         self.assertEqual(len(unique_entries), 2)
 
     def test_registry_marks_solar_as_manifest_disabled(self):
-        registry = load_collection_registry()
+        registry = cu.load_collection_registry()
         solar = registry["Solar_Athlete"]
         self.assertEqual(solar["collection_type"], "multi_channel_curated")
         self.assertEqual(solar["scan_strategy"], "manifest")
@@ -272,10 +272,37 @@ Transcript body.
         class Args:
             output_dir = None
             channel_url = "https://www.youtube.com/@ScottyOptimal"
+            workspace = None
 
         resolved = resolve_output_dir(Args())
         self.assertEqual(resolved.name, "ScottyOptimal_Raw")
         self.assertEqual(resolved.parent.name, "transcripts")
+
+    def test_configure_runtime_root_repoints_workspace_paths(self):
+        original_root = cu.REPO_ROOT
+        try:
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                workspace_root = Path(tmp_dir)
+                cu.configure_runtime_root(workspace_root)
+                self.assertEqual(cu.REPO_ROOT, workspace_root)
+                self.assertEqual(cu.TRANSCRIPTS_ROOT, workspace_root / "transcripts")
+                self.assertEqual(cu.PENDING_PATH, workspace_root / "yt_processor" / "pending_updates.json")
+                self.assertEqual(cu.REPORTS_DIR, workspace_root / "yt_processor" / "reports")
+        finally:
+            cu.configure_runtime_root(original_root)
+
+    def test_manifest_source_path_falls_back_to_bundled_manifest(self):
+        original_root = cu.REPO_ROOT
+        try:
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                cu.configure_runtime_root(Path(tmp_dir))
+                registry = cu.load_collection_registry()
+                solar = registry["Solar_Athlete"]
+                manifest_path = cu.resolve_manifest_source_path(solar)
+                self.assertTrue(manifest_path.exists())
+                self.assertIn("yt_processor", str(manifest_path))
+        finally:
+            cu.configure_runtime_root(original_root)
 
 
 if __name__ == "__main__":

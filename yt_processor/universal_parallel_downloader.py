@@ -6,8 +6,9 @@ Supports two input modes:
 - `--input-file`: a TSV file with `title<TAB>url`
 - `--channel-url`: a YouTube channel/handle URL
 
-If no arguments are provided, it falls back to the legacy Hyperarch defaults so
-existing ad-hoc usage still works.
+The default raw output folder resolves against the active workspace. In a source
+checkout that is usually the repo root; in an installed environment it defaults
+to a user-writable app data directory unless `--workspace` is provided.
 """
 
 from __future__ import annotations
@@ -20,8 +21,12 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from collection_utils import REPO_ROOT, URL_RE, YT_DLP_PATH, fetch_channel_videos
-from universal_chunker import chunk_transcripts, derive_default_base_name, derive_default_output_dir
+try:
+    from . import collection_utils as cu
+    from .universal_chunker import chunk_transcripts, derive_default_base_name, derive_default_output_dir
+except ImportError:
+    import collection_utils as cu
+    from universal_chunker import chunk_transcripts, derive_default_base_name, derive_default_output_dir
 
 
 DEFAULT_WORKERS = 10
@@ -92,6 +97,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--input-file", type=Path, help="TSV file with title<TAB>url")
     parser.add_argument("--channel-url", help="YouTube channel URL, handle URL, or /channel/ URL")
     parser.add_argument("--output-dir", type=Path, help="Directory to write raw transcript markdown files")
+    parser.add_argument(
+        "--workspace",
+        type=Path,
+        help="Workspace root for default outputs, pending data, and collection-relative paths",
+    )
     parser.add_argument("--workers", type=int, default=DEFAULT_WORKERS, help="Parallel worker count")
     parser.add_argument("--limit", type=int, default=0, help="Optional max videos to process from a channel")
     parser.add_argument(
@@ -113,7 +123,7 @@ def resolve_output_dir(args: argparse.Namespace) -> Path:
 
     if args.channel_url:
         channel_slug = slugify_channel_name(args.channel_url)
-        return REPO_ROOT / "transcripts" / f"{channel_slug}_Raw"
+        return cu.REPO_ROOT / "transcripts" / f"{channel_slug}_Raw"
 
     raise ValueError("Either --channel-url or --input-file is required.")
 
@@ -142,7 +152,7 @@ def load_videos_from_file(input_file: Path) -> list[tuple[str, str]]:
 
 
 def load_videos_from_channel(channel_url: str, limit: int) -> list[tuple[str, str]]:
-    channel_videos = fetch_channel_videos(channel_url)
+    channel_videos = cu.fetch_channel_videos(channel_url)
     if limit > 0:
         channel_videos = channel_videos[:limit]
 
@@ -174,7 +184,7 @@ def discover_existing_transcripts(output_dir: Path) -> dict[str, Path]:
         except OSError:
             continue
 
-        match = URL_RE.search(text)
+        match = cu.URL_RE.search(text)
         if match:
             existing.setdefault(match.group(1), path)
 
@@ -205,8 +215,7 @@ def download_video(
     cleanup_temp_files(output_dir, video_id)
 
     temp_template = output_dir / f"{TEMP_PREFIX}{video_id}.%(ext)s"
-    cmd = [
-        YT_DLP_PATH,
+    cmd = cu.get_yt_dlp_command(
         "--write-auto-sub",
         "--sub-langs",
         "en",
@@ -215,7 +224,7 @@ def download_video(
         "-o",
         str(temp_template),
         url,
-    ]
+    )
 
     try:
         subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=90)
@@ -254,14 +263,15 @@ def download_video(
         return (title, "ERROR", str(exc)[:120])
 
 
-def main():
+def main() -> int:
     args = parse_args()
+    cu.configure_runtime_root(args.workspace)
     if not args.channel_url and not args.input_file:
         print("No input provided.")
         print("Use one of:")
-        print("  python yt_processor\\universal_parallel_downloader.py --channel-url https://www.youtube.com/@ChannelHandle")
-        print("  python yt_processor\\universal_parallel_downloader.py --input-file your_videos.tsv --output-dir transcripts\\Sample_Raw")
-        return
+        print("  yt-pipeline-download --channel-url https://www.youtube.com/@ChannelHandle")
+        print("  yt-pipeline-download --input-file your_videos.tsv --output-dir transcripts\\Sample_Raw")
+        return 1
 
     input_file = args.input_file
     output_dir = resolve_output_dir(args)
@@ -270,7 +280,8 @@ def main():
     print("=" * 80)
     print("UNIVERSAL PARALLEL TRANSCRIPT DOWNLOADER")
     print("=" * 80)
-    print(f"Using yt-dlp: {YT_DLP_PATH}")
+    print(f"Using yt-dlp: {cu.describe_yt_dlp_command()}")
+    print(f"Workspace: {cu.REPO_ROOT}")
     print(f"Output directory: {output_dir.resolve()}")
     print(f"Workers: {args.workers}")
 
@@ -282,12 +293,12 @@ def main():
         if not input_file.exists():
             print(f"\nFile not found: {input_file}")
             print("Expected format: title<TAB>url")
-            return
+            return 1
         videos = load_videos_from_file(input_file)
 
     if not videos:
         print("\nNo videos found to process.")
-        return
+        return 1
 
     existing_transcripts = discover_existing_transcripts(output_dir)
     print(f"Loaded {len(videos)} videos")
@@ -367,6 +378,8 @@ def main():
         except Exception as exc:
             print(f"Chunk sync failed: {exc}")
 
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -1,102 +1,122 @@
 # YouTube Transcript Pipeline
 
-This repository contains the reusable transcript pipeline from this workspace.
+![CI](https://github.com/Mathewweiss02/youtube-transcript-pipeline/actions/workflows/ci.yml/badge.svg)
 
-It is centered on the Python tooling in `yt_processor/` for:
+This repository packages the reusable transcript pipeline from the larger workspace as an installable CLI.
 
-- downloading YouTube transcripts in parallel
-- normalizing raw transcript archives
-- chunking raw transcripts into merged PART files
-- scanning collections against channel inventories
-- auditing transcript collections and update safety
+It covers the core local workflow:
 
-## Included
+- download YouTube transcripts in parallel
+- normalize legacy raw transcript folders
+- rebuild merged PART files
+- scan collection coverage against live channels
+- update append-safe collections from pending scan results
+- audit transcript/archive health
 
-- `yt_processor/`
-- root pipeline docs and one-off migration notes
-- root utility scripts such as `inject_urls.py`, `merge_transcripts.py`, and `merge_with_urls.py`
+## Quickstart
 
-## Not Included
+Clone the repo, then use the bootstrap script for your platform.
 
-- the full local transcript corpus
-- the legacy `Howdy/` dump
-- frontend build artifacts and local app dependencies
-- local secrets and editor state
-- archived one-off channel scripts and local research outputs
-- channel-specific inventory dumps, title lists, and generated status files
+Windows:
 
-## Main Entry Points
+```powershell
+powershell -ExecutionPolicy Bypass -File .\bootstrap.ps1
+```
 
-- `yt_processor/universal_parallel_downloader.py`
-- `yt_processor/universal_chunker.py`
-- `yt_processor/normalize_raw_transcripts.py`
-- `yt_processor/transcript_scanner.py`
-- `yt_processor/transcript_updater.py`
-- `yt_processor/audit_transcript_collections.py`
+macOS / Linux:
 
-## Release-Ready Extras
+```bash
+bash ./bootstrap.sh
+```
 
-- `.env.example` for optional embedding-related environment variables
-- `bootstrap.ps1` for a quick Windows setup path
-- `examples/sample_raw/` for safe raw transcript examples
-- `examples/sample_chunked/` for a safe merged PART example
-- `PUBLIC_RELEASE_RISK_ASSESSMENT.md` for what should and should not be added from the full workspace
-- `GETTING_STARTED.md` for first-time setup
-- `LICENSE` (`MIT`)
+That installs the package in editable mode and runs `yt-pipeline-doctor`.
 
-## Environment
+Then activate the local virtual environment:
 
-The core downloader flow expects a working `yt-dlp` executable on the machine.
+Windows:
 
-- the scripts auto-discover `yt-dlp` in common Windows locations
-- optional API work uses values from `.env.example`
-- Python package dependencies for the published repo are listed in `yt_processor/requirements.txt`
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
 
-## Repository Scope
+macOS / Linux:
 
-This repo is intentionally curated around the reusable pipeline.
+```bash
+source .venv/bin/activate
+```
 
-That means the public-facing shape is:
+After that, the main end-to-end command is:
 
-- generic download / normalize / chunk / scan / audit tooling
+```bash
+yt-pipeline-download --channel-url https://www.youtube.com/@ChannelHandle --sync-chunks
+```
+
+## Installed Commands
+
+- `yt-pipeline-download`
+- `yt-pipeline-chunk`
+- `yt-pipeline-normalize`
+- `yt-pipeline-scan`
+- `yt-pipeline-update`
+- `yt-pipeline-audit`
+- `yt-pipeline-doctor`
+
+## Workspace Behavior
+
+The CLI no longer depends on being launched from the repo root.
+
+- In a source checkout, commands default to the repo itself as the active workspace.
+- In an installed environment outside a checkout, commands default to a user-writable app data directory.
+- Override that location with `--workspace /path/to/workspace` or the `YTP_WORKSPACE` environment variable.
+
+The workspace is where transcript data, reports, and pending-update files are written.
+
+## Manual Install
+
+If you do not want to use the bootstrap scripts:
+
+```bash
+python -m venv .venv
+python -m pip install -e .
+python -m yt_processor.pipeline_doctor --create-dirs --verify-examples
+```
+
+Optional vector/embedding extras:
+
+```bash
+python -m pip install -e .[vector]
+```
+
+## Safe Example Data
+
+The repo ships tiny synthetic examples in:
+
+- `examples/sample_raw/`
+- `examples/sample_chunked/`
+- `yt_processor/examples/`
+
+They are safe to publish and are used by the doctor smoke check.
+
+## Repo Scope
+
+This public repo intentionally includes:
+
+- the reusable `yt_processor/` pipeline
 - collection metadata and curated overrides
-- tests and small safe examples
+- tests, examples, bootstrap scripts, and setup docs
 
-And it intentionally excludes:
+It intentionally excludes:
 
-- channel-specific scratch scripts
-- manual investigation artifacts
-- local inventory dumps and intermediate reports
-- archived backup scripts kept only for local history
+- the full transcript corpus
+- the legacy `Howdy/` dump
+- local frontend state and app build artifacts
+- scratch scripts, inventories, and generated local research outputs
 
-## Typical Flow
+## Additional Docs
 
-Download raw transcripts for a channel:
+- `GETTING_STARTED.md`
+- `CHANGELOG.md`
+- `PUBLIC_RELEASE_RISK_ASSESSMENT.md`
+- `.env.example`
 
-```powershell
-python yt_processor\universal_parallel_downloader.py --channel-url https://www.youtube.com/@ChannelHandle
-```
-
-Download and rebuild merged PART files:
-
-```powershell
-python yt_processor\universal_parallel_downloader.py --channel-url https://www.youtube.com/@ChannelHandle --sync-chunks
-```
-
-Normalize a legacy raw folder:
-
-```powershell
-python yt_processor\normalize_raw_transcripts.py --input-dir transcripts\Some_Channel_Raw
-```
-
-Audit collection health:
-
-```powershell
-python yt_processor\audit_transcript_collections.py
-```
-
-## Notes
-
-This repo is set up to share the pipeline itself. The local transcript corpus is intentionally excluded because it is large and may need separate handling depending on privacy, copyright, and hosting decisions.
-
-If you want to see the expected file shapes without using the real corpus, start with `examples/sample_raw/` and `examples/sample_chunked/`.
+The transcript corpus is intentionally split into a separate private archive repo because of size and content-distribution risk.

@@ -5,8 +5,6 @@ Universal transcript chunker.
 Supports:
 - `--collection` for appendable collections in `collection_registry.json`
 - `--input-dir` / `--output-dir` / `--base-name` for manual use
-
-If no arguments are provided, it falls back to the legacy Hyperarch defaults.
 """
 
 from __future__ import annotations
@@ -17,12 +15,10 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from collection_utils import (
-    MAX_CHUNK_SIZE,
-    load_collection_registry,
-    resolve_collection_raw_dir,
-    resolve_collection_transcript_dir,
-)
+try:
+    from . import collection_utils as cu
+except ImportError:
+    import collection_utils as cu
 
 
 CHUNK_FILE_RE = re.compile(r"(?:PART|CHUNK|CONSOLIDATED_PART)_(\d+)\.md$", re.IGNORECASE)
@@ -44,13 +40,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--max-chunk-size-mb",
         type=float,
-        default=MAX_CHUNK_SIZE / 1024 / 1024,
+        default=cu.MAX_CHUNK_SIZE / 1024 / 1024,
         help="Maximum chunk size in megabytes",
     )
     parser.add_argument(
         "--replace-existing",
         action="store_true",
         help="Replace existing PART/CHUNK files in the output directory after a successful staged build",
+    )
+    parser.add_argument(
+        "--workspace",
+        type=Path,
+        help="Workspace root for collection-relative transcript and raw directories",
     )
     parser.add_argument("--dry-run", action="store_true", help="Print what would be written without touching files")
     return parser.parse_args()
@@ -71,7 +72,7 @@ def derive_default_base_name(input_dir: Path) -> str:
 
 
 def resolve_collection_settings(collection_key: str) -> dict:
-    collections = load_collection_registry()
+    collections = cu.load_collection_registry()
     lower_map = {key.lower(): key for key in collections}
     resolved_key = collection_key if collection_key in collections else lower_map.get(collection_key.lower())
     if not resolved_key:
@@ -83,14 +84,14 @@ def resolve_collection_settings(collection_key: str) -> dict:
             f"Collection '{resolved_key}' is not append-safe. Use explicit --input-dir/--output-dir for manual chunking."
         )
 
-    input_dir = resolve_collection_raw_dir(collection)
+    input_dir = cu.resolve_collection_raw_dir(collection)
     if input_dir is None:
         raise ValueError(f"Collection '{resolved_key}' does not define raw_dir")
 
     return {
         "collection_key": resolved_key,
         "input_dir": input_dir,
-        "output_dir": resolve_collection_transcript_dir(collection),
+        "output_dir": cu.resolve_collection_transcript_dir(collection),
         "base_name": collection.get("base_name", resolved_key),
         "chunk_file_template": collection.get("chunk_file_template"),
     }
@@ -313,7 +314,7 @@ def chunk_transcripts(
     base_name: str,
     chunk_file_template: str | None = None,
     sort_mode: str = "mtime",
-    max_chunk_size: int = MAX_CHUNK_SIZE,
+    max_chunk_size: int = cu.MAX_CHUNK_SIZE,
     replace_existing: bool = False,
     dry_run: bool = False,
 ) -> dict:
@@ -388,6 +389,7 @@ def print_summary(settings: dict, result: dict):
 
 def main() -> int:
     args = parse_args()
+    cu.configure_runtime_root(args.workspace)
     settings = resolve_settings(args)
 
     result = chunk_transcripts(

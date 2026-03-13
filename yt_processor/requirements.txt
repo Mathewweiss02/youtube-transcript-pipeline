@@ -1,6 +1,7 @@
-# Core optional API / embedding dependencies for the published pipeline.
-# The downloader / chunker flow relies on an external `yt-dlp` executable,
-# not the Python package.
+# Legacy convenience mirror of the package's optional `[vector]` extra.
+# The primary install path for this repo is now:
+#   python -m pip install -e .[vector]
+# The base CLI install (`python -m pip install -e .`) already pulls in yt-dlp.
 
 openai
 pinecone

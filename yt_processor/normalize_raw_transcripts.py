@@ -11,7 +11,10 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from collection_utils import URL_RE
+try:
+    from . import collection_utils as cu
+except ImportError:
+    import collection_utils as cu
 
 
 def parse_args() -> argparse.Namespace:
@@ -39,7 +42,7 @@ def extract_video_id_from_file(path: Path) -> str:
     except OSError:
         return ""
 
-    match = URL_RE.search(text)
+    match = cu.URL_RE.search(text)
     return match.group(1) if match else ""
 
 
@@ -94,7 +97,7 @@ def normalize_raw_transcripts(input_dir: Path, archive_dir: Path, dry_run: bool 
     return summary
 
 
-def main():
+def main() -> int:
     args = parse_args()
     archive_dir = args.archive_dir or (args.input_dir.parent / f"{args.input_dir.name}_Legacy")
     summary = normalize_raw_transcripts(args.input_dir, archive_dir, dry_run=args.dry_run)
@@ -110,7 +113,8 @@ def main():
     print(f"Renamed to canonical: {summary['renamed_to_canonical']}")
     print(f"Archived duplicate legacy files: {summary['archived_duplicates']}")
     print(f"Skipped without video ID: {summary['skipped_without_video_id']}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

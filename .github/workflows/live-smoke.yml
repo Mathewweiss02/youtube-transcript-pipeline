@@ -1,0 +1,55 @@
+name: live-smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 15 * * 6"
+
+jobs:
+  youtube-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install package
+        run: python -m pip install -e .
+
+      - name: Run live YouTube smoke test
+        shell: bash
+        env:
+          YTP_WORKSPACE: ${{ runner.temp }}/ytp-workspace
+        run: |
+          set -euo pipefail
+          yt-pipeline-doctor --workspace "$YTP_WORKSPACE" --create-dirs --verify-examples
+          yt-pipeline-download --workspace "$YTP_WORKSPACE" --channel-url https://www.youtube.com/@ScottyOptimal --limit 1 --sync-chunks
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          workspace = Path(os.environ["YTP_WORKSPACE"])
+          transcripts_root = workspace / "transcripts"
+          raw_dirs = [path for path in transcripts_root.glob("*_Raw") if path.is_dir()]
+          merged_dirs = [path for path in transcripts_root.iterdir() if path.is_dir() and not path.name.endswith("_Raw")]
+          raw_markdown_files = sum(1 for folder in raw_dirs for _ in folder.glob("*.md"))
+          merged_markdown_files = sum(1 for folder in merged_dirs for _ in folder.glob("*.md"))
+
+          if not raw_dirs:
+              raise SystemExit("No raw transcript folders were created.")
+          if raw_markdown_files == 0:
+              raise SystemExit("Raw transcript folder does not contain markdown files.")
+          if not merged_dirs:
+              raise SystemExit("No merged transcript folders were created.")
+          if merged_markdown_files == 0:
+              raise SystemExit("Merged transcript folder does not contain markdown files.")
+          PY

@@ -3,30 +3,27 @@
 
 from __future__ import annotations
 
+import argparse
 import datetime as dt
 import re
 from pathlib import Path
 
-from collection_utils import (
-    MAX_CHUNK_SIZE,
-    REPO_ROOT,
-    REPORTS_DIR,
-    URL_RE,
-    build_bundle_records,
-    classify_bundle_role,
-    discover_bundle_files,
-    ensure_output_dirs,
-    extract_candidates_from_bundle,
-    load_collection_overrides,
-    load_collection_registry,
-    load_json,
-    resolve_collection_raw_dir,
-    resolve_collection_transcript_dir,
-    resolve_manifest_path,
-    save_json,
-)
+try:
+    from . import collection_utils as cu
+except ImportError:
+    import collection_utils as cu
 
 VIDEO_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Audit local transcript collections and pipeline risk.")
+    parser.add_argument(
+        "--workspace",
+        type=Path,
+        help="Workspace root for transcripts, reports, and collection-relative paths",
+    )
+    return parser.parse_args()
 
 
 def _raw_dir_snapshot(raw_dir: Path | None) -> dict:
@@ -57,20 +54,20 @@ def _raw_dir_snapshot(raw_dir: Path | None) -> dict:
 
 
 def _local_collection_snapshot(collection_key: str, collection: dict) -> dict:
-    overrides = load_collection_overrides(collection_key)
-    transcript_dir = resolve_collection_transcript_dir(collection)
-    raw_dir = resolve_collection_raw_dir(collection)
+    overrides = cu.load_collection_overrides(collection_key)
+    transcript_dir = cu.resolve_collection_transcript_dir(collection)
+    raw_dir = cu.resolve_collection_raw_dir(collection)
     raw_snapshot = _raw_dir_snapshot(raw_dir)
-    bundle_files = discover_bundle_files(collection)
-    bundle_records = build_bundle_records(collection, overrides)
+    bundle_files = cu.discover_bundle_files(collection)
+    bundle_records = cu.build_bundle_records(collection, overrides)
 
     manifest_exists = False
     manifest_stats = {}
     if collection["scan_strategy"] == "manifest":
-        manifest_path = resolve_manifest_path(collection)
+        manifest_path = cu.resolve_manifest_source_path(collection)
         if manifest_path.exists():
             manifest_exists = True
-            manifest_stats = load_json(manifest_path, default={}).get("stats", {})
+            manifest_stats = cu.load_json(manifest_path, default={}).get("stats", {})
 
     entries = []
     duplicate_video_ids: dict[str, list[str]] = {}
@@ -82,7 +79,7 @@ def _local_collection_snapshot(collection_key: str, collection: dict) -> dict:
     for record in bundle_records:
         role = record["bundle_role"]
         bundle_role_counts[role] = bundle_role_counts.get(role, 0) + 1
-        if record["size_bytes"] > MAX_CHUNK_SIZE:
+        if record["size_bytes"] > cu.MAX_CHUNK_SIZE:
             oversized_files.append(
                 {
                     "path": record["path"],
@@ -92,17 +89,17 @@ def _local_collection_snapshot(collection_key: str, collection: dict) -> dict:
             )
 
     for bundle_path in bundle_files:
-        role = classify_bundle_role(bundle_path.name, collection, overrides)
+        role = cu.classify_bundle_role(bundle_path.name, collection, overrides)
         if role == "reference_only":
             continue
 
         text = bundle_path.read_text(encoding="utf-8", errors="ignore")
-        inline_url_video_ids.update(URL_RE.findall(text))
+        inline_url_video_ids.update(cu.URL_RE.findall(text))
 
-        candidates = extract_candidates_from_bundle(bundle_path, overrides.get("ignored_titles", []))
+        candidates = cu.extract_candidates_from_bundle(bundle_path, overrides.get("ignored_titles", []))
         for candidate in candidates:
             entry = dict(candidate)
-            entry["bundle_file"] = str(bundle_path.relative_to(REPO_ROOT))
+            entry["bundle_file"] = cu.display_path(bundle_path)
             entries.append(entry)
 
             video_id = entry.get("video_id") or ""
@@ -178,12 +175,12 @@ def _build_cross_collection_duplicates(collections: dict[str, dict]) -> dict:
     title_groups: dict[str, set[str]] = {}
 
     for collection_key, collection in collections.items():
-        overrides = load_collection_overrides(collection_key)
-        for bundle_path in discover_bundle_files(collection):
-            role = classify_bundle_role(bundle_path.name, collection, overrides)
+        overrides = cu.load_collection_overrides(collection_key)
+        for bundle_path in cu.discover_bundle_files(collection):
+            role = cu.classify_bundle_role(bundle_path.name, collection, overrides)
             if role == "reference_only":
                 continue
-            for candidate in extract_candidates_from_bundle(bundle_path, overrides.get("ignored_titles", [])):
+            for candidate in cu.extract_candidates_from_bundle(bundle_path, overrides.get("ignored_titles", [])):
                 video_id = candidate.get("video_id") or ""
                 if video_id:
                     video_groups.setdefault(video_id, set()).add(collection_key)
@@ -371,16 +368,20 @@ def _build_markdown_report(payload: dict) -> str:
 
 
 def main() -> int:
-    ensure_output_dirs()
-    collections = load_collection_registry()
+    args = parse_args()
+    cu.configure_runtime_root(args.workspace)
+    cu.ensure_output_dirs()
+    collections = cu.load_collection_registry()
+    transcript_root = cu.TRANSCRIPTS_ROOT
+    transcript_root.mkdir(parents=True, exist_ok=True)
     transcript_namespaces = sorted(
         p.name
-        for p in Path("transcripts").iterdir()
+        for p in transcript_root.iterdir()
         if p.is_dir() and not p.name.endswith("_Raw") and "QA_Sources" not in p.name
     )
 
     registry_namespaces = sorted(collections.keys())
-    registry_only = [name for name in registry_namespaces if not resolve_collection_transcript_dir(collections[name]).exists()]
+    registry_only = [name for name in registry_namespaces if not cu.resolve_collection_transcript_dir(collections[name]).exists()]
     disk_only = [name for name in transcript_namespaces if name not in collections]
 
     collection_snapshots = {
@@ -389,7 +390,7 @@ def main() -> int:
     }
     cross_duplicates = _build_cross_collection_duplicates(collections)
 
-    pending = load_json(Path("yt_processor/pending_updates.json"), default={})
+    pending = cu.load_json(cu.PENDING_PATH, default={})
     pending_summary = {}
     for key, record in pending.get("collections", {}).items():
         pending_summary[key] = {
@@ -438,9 +439,9 @@ def main() -> int:
         "raw_sync_findings": raw_sync_findings,
     }
 
-    json_path = REPORTS_DIR / "collection_audit.json"
-    md_path = REPORTS_DIR / "collection_audit.md"
-    save_json(json_path, payload)
+    json_path = cu.REPORTS_DIR / "collection_audit.json"
+    md_path = cu.REPORTS_DIR / "collection_audit.md"
+    cu.save_json(json_path, payload)
     md_path.write_text(_build_markdown_report(payload), encoding="utf-8")
     print(f"Wrote {json_path}")
     print(f"Wrote {md_path}")

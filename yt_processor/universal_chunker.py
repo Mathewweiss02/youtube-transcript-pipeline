@@ -25,9 +25,6 @@ from collection_utils import (
 )
 
 
-DEFAULT_INPUT_DIR = Path("../transcripts/Hyperarch_Fascia_Raw")
-DEFAULT_OUTPUT_DIR = Path("../transcripts/Hyperarch_Fascia")
-DEFAULT_BASE_NAME = "HYPERARCH_FASCIA"
 CHUNK_FILE_RE = re.compile(r"(?:PART|CHUNK|CONSOLIDATED_PART)_(\d+)\.md$", re.IGNORECASE)
 
 
@@ -107,7 +104,9 @@ def resolve_settings(args: argparse.Namespace) -> dict:
         base_name = settings["base_name"]
         chunk_file_template = settings["chunk_file_template"]
     else:
-        input_dir = args.input_dir or DEFAULT_INPUT_DIR
+        if args.input_dir is None:
+            raise ValueError("Either --collection or --input-dir is required.")
+        input_dir = args.input_dir
         output_dir = args.output_dir or derive_default_output_dir(input_dir)
         base_name = args.base_name or derive_default_base_name(input_dir)
         chunk_file_template = args.chunk_file_template

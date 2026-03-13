@@ -20,12 +20,10 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from collection_utils import URL_RE, YT_DLP_PATH, fetch_channel_videos
+from collection_utils import REPO_ROOT, URL_RE, YT_DLP_PATH, fetch_channel_videos
 from universal_chunker import chunk_transcripts, derive_default_base_name, derive_default_output_dir
 
 
-DEFAULT_INPUT_FILE = Path("hyperarch_formatted.txt")
-DEFAULT_OUTPUT_DIR = Path("../transcripts/Hyperarch_Fascia_Raw")
 DEFAULT_WORKERS = 10
 TEMP_PREFIX = "__tmp_transcript__"
 VIDEO_ID_FILENAME_RE = re.compile(r"^[A-Za-z0-9_-]{11}\.md$")
@@ -115,9 +113,9 @@ def resolve_output_dir(args: argparse.Namespace) -> Path:
 
     if args.channel_url:
         channel_slug = slugify_channel_name(args.channel_url)
-        return Path("../transcripts") / f"{channel_slug}_Raw"
+        return REPO_ROOT / "transcripts" / f"{channel_slug}_Raw"
 
-    return DEFAULT_OUTPUT_DIR
+    raise ValueError("Either --channel-url or --input-file is required.")
 
 
 def load_videos_from_file(input_file: Path) -> list[tuple[str, str]]:
@@ -258,7 +256,14 @@ def download_video(
 
 def main():
     args = parse_args()
-    input_file = args.input_file or DEFAULT_INPUT_FILE
+    if not args.channel_url and not args.input_file:
+        print("No input provided.")
+        print("Use one of:")
+        print("  python yt_processor\\universal_parallel_downloader.py --channel-url https://www.youtube.com/@ChannelHandle")
+        print("  python yt_processor\\universal_parallel_downloader.py --input-file your_videos.tsv --output-dir transcripts\\Sample_Raw")
+        return
+
+    input_file = args.input_file
     output_dir = resolve_output_dir(args)
     output_dir.mkdir(parents=True, exist_ok=True)
 

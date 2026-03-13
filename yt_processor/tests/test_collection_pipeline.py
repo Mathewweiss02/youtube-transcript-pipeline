@@ -12,7 +12,7 @@ from collection_utils import extract_candidates_from_bundle, load_collection_reg
 from normalize_raw_transcripts import normalize_raw_transcripts
 from transcript_scanner import scan_manual_collection
 from universal_chunker import chunk_transcripts
-from universal_parallel_downloader import discover_existing_transcripts, download_video
+from universal_parallel_downloader import discover_existing_transcripts, download_video, resolve_output_dir
 
 
 class CollectionPipelineTests(unittest.TestCase):
@@ -267,6 +267,15 @@ Transcript body.
             self.assertTrue((archive_dir / "Old Title.md").exists())
             self.assertFalse(unique_legacy.exists())
             self.assertTrue((raw_dir / "zzz999yyy88.md").exists())
+
+    def test_downloader_default_output_dir_uses_repo_transcripts_root(self):
+        class Args:
+            output_dir = None
+            channel_url = "https://www.youtube.com/@ScottyOptimal"
+
+        resolved = resolve_output_dir(Args())
+        self.assertEqual(resolved.name, "ScottyOptimal_Raw")
+        self.assertEqual(resolved.parent.name, "transcripts")
 
 
 if __name__ == "__main__":

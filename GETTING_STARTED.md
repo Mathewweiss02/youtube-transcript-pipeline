@@ -9,7 +9,27 @@ This is the fastest path for a new user who wants to use the public pipeline rep
 
 The scripts try to auto-discover `yt-dlp`, but having it on `PATH` is the easiest setup.
 
-## 2. Install Python dependencies
+## 2. Bootstrap the repo
+
+The fastest Windows path is:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\bootstrap.ps1
+```
+
+That will:
+
+- install Python dependencies
+- create the local `transcripts/` directory if needed
+- run a first-run environment check
+
+You can also run the doctor directly:
+
+```powershell
+python yt_processor\pipeline_doctor.py --create-dirs --verify-examples
+```
+
+## 3. Install Python dependencies manually
 
 From the repo root:
 
@@ -17,7 +37,7 @@ From the repo root:
 pip install -r yt_processor\requirements.txt
 ```
 
-## 3. Download transcripts for a channel
+## 4. Download transcripts for a channel
 
 ```powershell
 python yt_processor\universal_parallel_downloader.py --channel-url https://www.youtube.com/@ChannelHandle
@@ -25,7 +45,7 @@ python yt_processor\universal_parallel_downloader.py --channel-url https://www.y
 
 This writes raw transcript markdown files into a `_Raw` folder under `transcripts/`.
 
-## 4. Download and rebuild merged PART files
+## 5. Download and rebuild merged PART files
 
 ```powershell
 python yt_processor\universal_parallel_downloader.py --channel-url https://www.youtube.com/@ChannelHandle --sync-chunks
@@ -36,7 +56,7 @@ This does both:
 - download raw transcripts
 - rebuild the merged PART files from the raw folder
 
-## 5. Normalize an older raw folder
+## 6. Normalize an older raw folder
 
 If a raw folder contains old title-based filenames instead of canonical video ID filenames:
 
@@ -44,7 +64,7 @@ If a raw folder contains old title-based filenames instead of canonical video ID
 python yt_processor\normalize_raw_transcripts.py --input-dir transcripts\Some_Channel_Raw
 ```
 
-## 6. Audit collection health
+## 7. Audit collection health
 
 ```powershell
 python yt_processor\audit_transcript_collections.py
@@ -55,7 +75,7 @@ This writes:
 - `yt_processor/reports/collection_audit.json`
 - `yt_processor/reports/collection_audit.md`
 
-## 7. Optional API setup
+## 8. Optional API setup
 
 If you want embedding and downstream vector workflows, start from:
 

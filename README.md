@@ -32,6 +32,13 @@ It is centered on the Python tooling in `yt_processor/` for:
 - `yt_processor/transcript_updater.py`
 - `yt_processor/audit_transcript_collections.py`
 
+## Release-Ready Extras
+
+- `.env.example` for optional embedding-related environment variables
+- `examples/sample_raw/` for safe raw transcript examples
+- `examples/sample_chunked/` for a safe merged PART example
+- `PUBLIC_RELEASE_RISK_ASSESSMENT.md` for what should and should not be added from the full workspace
+
 ## Typical Flow
 
 Download raw transcripts for a channel:
@@ -61,3 +68,5 @@ python yt_processor\audit_transcript_collections.py
 ## Notes
 
 This repo is set up to share the pipeline itself. The local transcript corpus is intentionally excluded because it is large and may need separate handling depending on privacy, copyright, and hosting decisions.
+
+If you want to see the expected file shapes without using the real corpus, start with `examples/sample_raw/` and `examples/sample_chunked/`.

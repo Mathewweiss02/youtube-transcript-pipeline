@@ -40,6 +40,8 @@ It is centered on the Python tooling in `yt_processor/` for:
 - `examples/sample_raw/` for safe raw transcript examples
 - `examples/sample_chunked/` for a safe merged PART example
 - `PUBLIC_RELEASE_RISK_ASSESSMENT.md` for what should and should not be added from the full workspace
+- `GETTING_STARTED.md` for first-time setup
+- `LICENSE` (`MIT`)
 
 ## Environment
 

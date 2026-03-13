@@ -1,0 +1,43 @@
+{
+  "ignored_files": [
+    "INDEX.md"
+  ],
+  "ignored_titles": [
+    "Civilization Series",
+    "Geo Strategy Series",
+    "Geo-Strategy Series",
+    "Secret History Series",
+    "Special Series"
+  ],
+  "bundle_file_overrides": {
+    "INDEX.md": {
+      "bundle_role": "reference_only",
+      "source_channel_keys": [
+        "predictive-history"
+      ]
+    },
+    "MERGED_ALL_Prof_JIANG_TRANSCRIPTS_WITH_URLS.md": {
+      "bundle_role": "legacy_merge",
+      "source_channel_keys": [
+        "predictive-history"
+      ]
+    },
+    "MERGED_ALL_Prof_JIANG_TRANSCRIPTS.md": {
+      "bundle_role": "legacy_merge",
+      "source_channel_keys": [
+        "predictive-history"
+      ]
+    },
+    "PROFESSOR_JIANG_PART_01.md": {
+      "bundle_role": "canonical_chunk",
+      "source_channel_keys": [
+        "predictive-history"
+      ]
+    }
+  },
+  "entries": {},
+  "manual_notes": [
+    "The merged-with-URLs file is the highest-confidence legacy source for provenance recovery.",
+    "The plain merged export and part file may overlap and should be deduped by video identity."
+  ]
+}

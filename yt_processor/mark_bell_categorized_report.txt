@@ -1,0 +1,180 @@
+# Mark Bell Video Categorization Report
+
+Total Videos: 1903
+
+## Category Distribution
+
+- **STRENGTH_TRAINING**: 719 videos (37.8%)
+- **UNCATEGORIZED**: 362 videos (19.0%)
+- **NUTRITION**: 211 videos (11.1%)
+- **TECHNIQUE_BIOMECHANICS**: 136 videos (7.1%)
+- **PEDS_PERFORMANCE_ENHANCEMENT**: 84 videos (4.4%)
+- **EQUIPMENT_GEAR**: 78 videos (4.1%)
+- **RECOVERY_REHABILITATION**: 64 videos (3.4%)
+- **SATURDAY_SCHOOL**: 51 videos (2.7%)
+- **PEPTIDES_HORMONES**: 43 videos (2.3%)
+- **MINDSET_MOTIVATION**: 43 videos (2.3%)
+- **INTERVIEWS_GUESTS**: 40 videos (2.1%)
+- **LONGEVITY_HEALTHSPAN**: 33 videos (1.7%)
+- **BUSINESS_ENTREPRENEURSHIP**: 26 videos (1.4%)
+- **COMMUNITY_EVENTS**: 13 videos (0.7%)
+
+## Sample Videos by Category
+
+### BUSINESS_ENTREPRENEURSHIP
+
+1. How Hostage Tape Became A UFC Partner And Multi Million Dollar Brand - Alex Neist
+   Tags: brand
+
+1. Why The Fitness Industry Doesn't Want YOU Thinking Critically
+   Tags: industry
+
+1. Ditch the Norm: Forge Your Own Path to Success 
+   Tags: success
+
+### COMMUNITY_EVENTS
+
+1. Is Big Pharma Helping Us Live Longer or Ripping Us Off?
+   Tags: live
+
+1. All About Building MUSCLE | Live Q&A
+   Tags: live
+
+1. Comedy Meets Fitness: Tom Segura's Remarkable Weight Loss Journey
+   Tags: meet
+
+### EQUIPMENT_GEAR
+
+1. Why Sandbags Beat Barbells for Functional Strength Ft. Ben Patrick
+   Secondary: STRENGTH_TRAINING
+   Tags: bar, bell
+
+1. Chairs Are Making You Weaker � This Stool Can Change That
+   Tags: tool
+
+1. Barbells DON'T Build Athleticism: Strategies For Developing Speed, Strength, & Power - Fred Duncan
+   Secondary: STRENGTH_TRAINING
+   Tags: bar, bell
+
+### INTERVIEWS_GUESTS
+
+1. Rewriting the Rules of Hybrid Fitness � Mindset, Motherhood, Making a Champion
+   Secondary: MINDSET_MOTIVATION
+   Tags: champion
+
+1. Why Artificial Light Is the Silent Epidemic No One Talks About - Dr. Alexis Cowan
+   Tags: talk
+
+1. How Coaches Control You: It�s NOT All About Genetics
+   Tags: coach
+
+### LONGEVITY_HEALTHSPAN
+
+1. How To Naturally Enhance Your Mitochondria Health
+   Secondary: RECOVERY_REHABILITATION
+   Tags: mitochondria, health
+
+1. The Legal Drug That Boosts Energy, Focus & Longevity � Methylene Blue
+   Secondary: MINDSET_MOTIVATION
+   Tags: longevity
+
+1. Stop Sabotaging Your Sex Life: Secrets Every Man SHOULD Know - Dr. Mohit Khera
+   Tags: aging
+
+### MINDSET_MOTIVATION
+
+1. Why Your Fitness Goals Should Go Beyond Just Aesthetics
+   Tags: goal
+
+1. Stop Waiting for Motivation! Simple Hacks to Build Consistency
+   Tags: motivation, consistency
+
+1. Debunking the Myth of Mental Toughness: A Deep Dive Discussion
+   Tags: mental, mental_toughness
+
+### NUTRITION
+
+1. 80% of Supplements Are Fake | Shawn Wells Exposes the Industry
+   Secondary: BUSINESS_ENTREPRENEURSHIP
+   Tags: supplement
+
+1. The Truth About Fasting: Boost Your Health & Reset Your Body!
+   Secondary: RECOVERY_REHABILITATION
+   Tags: fasting
+
+1. Carb Cycling Explained: Eat 1,100g Carbs & Stay Lean! Ft. Jon Heck
+   Tags: eat, carb
+
+### PEDS_PERFORMANCE_ENHANCEMENT
+
+1. The Chicken Shake Will Get You Ripped
+   Tags: ped
+
+1. Heal Smarter: Revolutionary Alternatives to Traditional Medicine
+   Secondary: RECOVERY_REHABILITATION
+   Tags: rad
+
+1. Why Modern Grapplers Are Ditching Traditional Methods to Succeed
+   Tags: rad
+
+### PEPTIDES_HORMONES
+
+1. Peptides, Metabolism & the New Age of Biohacking (feat. Shawn Wells)
+   Secondary: INTERVIEWS_GUESTS
+   Tags: peptide
+
+1. Best Tools For Hormone Optimization
+   Tags: optimization, hormone
+
+1. TRT Explained: The Science of How To Boost Testosterone
+   Tags: testosterone, trt
+
+### RECOVERY_REHABILITATION
+
+1. Your Mouth Is Ruining Your Health (Bio Dentistry Explained) w/ Dr. Dominik Nischwitz
+   Tags: heal
+
+1. Circadian Biology Hacks for Energy, Sleep, and Recovery Ft. Zaid Dahhaj
+   Secondary: PEPTIDES_HORMONES, LONGEVITY_HEALTHSPAN
+   Tags: recover, recovery
+
+1. How Fitness Influencers Are Destroying Your Health
+   Tags: heal
+
+### SATURDAY_SCHOOL
+
+1. Anger Is Expensive, Calm Is Power | #SaturdaySchool
+   Tags: school
+
+1. Stop Hanging With Losers: Level Up Your Circle | Saturday School
+   Tags: school, saturday_school
+
+1. Cardio & Nutrition for Fat People | Saturday School
+   Secondary: SATURDAY_SCHOOL
+   Tags: nutrition, fat
+
+### STRENGTH_TRAINING
+
+1. Is �Clean Eating� Making Athletes Weaker?
+   Tags: athlete
+
+1. Stop Training Like a Robot: Build Real Athletic Skills
+   Tags: training
+
+1. The Key to Building Real Strength (It�s Not Just Heavy Lifts) Ft. Marshall Davis Jones
+   Tags: lift, strength
+
+### TECHNIQUE_BIOMECHANICS
+
+1. Check Engine Light: Breath, Stress, and Human Performance (w/ Rob Wilson)
+   Secondary: LONGEVITY_HEALTHSPAN
+   Tags: form
+
+1. Ido Portal Teaches Movement Intelligence: Why You Must Train, Not Exercise
+   Tags: movement
+
+1. Ido Portal: Mastery Is a Myth | Movement Is an Endless Investigation
+   Tags: movement
+
+### UNCATEGORIZED
+

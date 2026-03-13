@@ -1,0 +1,30 @@
+{
+  "ignored_files": [
+    "INDEX.md"
+  ],
+  "ignored_titles": [],
+  "bundle_file_overrides": {
+    "INDEX.md": {
+      "bundle_role": "reference_only",
+      "source_channel_keys": [
+        "alchemical-science"
+      ]
+    },
+    "ALCHEMICAL_SCIENCE_PART_*.md": {
+      "bundle_role": "canonical_chunk",
+      "source_channel_keys": [
+        "alchemical-science"
+      ]
+    },
+    "MERGED_ALL_Alchemical_Science.md": {
+      "bundle_role": "legacy_merge",
+      "source_channel_keys": [
+        "alchemical-science"
+      ]
+    }
+  },
+  "entries": {},
+  "manual_notes": [
+    "The merged export overlaps with canonical part files and should not be treated as separate channel coverage."
+  ]
+}

@@ -1,0 +1,80 @@
+# Deep Analysis Report: Uncategorized Mark Bell Videos
+
+Generated: 2026-01-07 12:11:56
+Total Uncategorized: 374
+
+## Classification Summary
+
+- High Confidence (ready to auto-classify): 0
+- Medium Confidence (needs quick review): 168
+- Low Confidence/Unresolved: 206
+
+## High Priority - Ready for Auto-Classification
+
+
+## Medium Priority - Needs Quick Review (168 items)
+
+- MINDSET_MOTIVATION: 168 videos
+
+## Low Priority - Requires Manual Review (206 items)
+
+
+## Pattern Analysis
+
+### Common Features in Uncategorized Videos:
+
+- has_guest: 59 videos (15.8%)
+- has_question: 168 videos (44.9%)
+- has_number: 97 videos (25.9%)
+- has_episode: 69 videos (18.4%)
+
+## Recommendations
+
+1. **Immediate Action:** Auto-classify all HIGH confidence items
+2. **Quick Review:** Review MEDIUM confidence items (focus on top categories)
+3. **Deep Dive:** Analyze LOW confidence items for new category patterns
+4. **Keyword Enhancement:** Add new keywords based on patterns found
+5. **Quality Check:** Spot check 10% of auto-classified items
+
+## Sample Items Needing Manual Review
+
+### 3. DMT Trips, AI, Hollywood Secrets, Aliens, & Modern Conspiracies w/ Danny Jones
+- **Features:** Guest=False, Question=False
+- **Top Score:** None
+
+### 7. The DARKSIDE of Chasing Perfection
+- **Features:** Guest=False, Question=False
+- **Top Score:** None
+
+### 8. A New Kratom Warning Everyone Needs To Hear
+- **Features:** Guest=False, Question=False
+- **Top Score:** None
+
+### 11. Eddie Hall vs Francis Ngannou: Strongest Man Vs Strongest Punch
+- **Features:** Guest=False, Question=False
+- **Top Score:** None
+
+### 12. Stan Efferding Exposes Functional Fitness, Fake Gurus, and Bad Science
+- **Features:** Guest=False, Question=False
+- **Top Score:** None
+
+### 13. P*nis Pump Tips to Make Your Tip HUGE
+- **Features:** Guest=False, Question=False
+- **Top Score:** None
+
+### 14. Stronger Jaw, Hands, Feet, Calves - All the Exercises You're NOT Doing
+- **Features:** Guest=False, Question=False
+- **Top Score:** None
+
+### 15. Major Results With Minimal Time: Get Fit Without Overcommitting
+- **Features:** Guest=True, Question=False
+- **Top Score:** None
+
+### 18. Born or Built: The Genetics vs Hard Work Debate in Sports
+- **Features:** Guest=False, Question=False
+- **Top Score:** None
+
+### 19. It�s Time To Parent Your Parents (Get Your Parents Stronger)
+- **Features:** Guest=False, Question=False
+- **Top Score:** None
+

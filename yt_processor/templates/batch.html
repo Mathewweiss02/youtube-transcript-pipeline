@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>YT Processor - Select Videos</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0da6f2",
+              "background-light": "#f5f7f8",
+              "background-dark": "#101c22",
+            },
+            fontFamily: { "display": ["Space Grotesk", "sans-serif"] },
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-100">
+<div class="min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="flex items-center justify-between whitespace-nowrap border-b border-gray-200/50 dark:border-white/10 px-6 md:px-10 py-3 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+    <div class="flex items-center gap-3">
+      <div class="size-6 text-primary">
+        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path clip-rule="evenodd" d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z" fill="currentColor" fill-rule="evenodd" />
+        </svg>
+      </div>
+      <a href="/" class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">YT Processor</a>
+    </div>
+    <a href="/" class="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-semibold bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-700">
+      <span class="material-symbols-outlined text-sm">arrow_back</span>
+      New Input
+    </a>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-1 px-4 sm:px-6 lg:px-10 py-6">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-gray-900 dark:text-white mb-2">Select videos to process</h1>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">We parsed your input and found {{ videos|length }} video(s). Choose which ones you want transcripts for, then download them as a ZIP.</p>
+
+      {% if error %}
+      <div class="mb-4 rounded-lg border border-red-300 bg-red-50/80 text-red-700 px-4 py-2 text-sm">
+        {{ error }}
+      </div>
+      {% endif %}
+
+      {% if not videos %}
+      <div class="mt-10 text-center text-sm text-gray-500 dark:text-gray-400">
+        No videos to show. <a href="/" class="text-primary font-semibold">Go back</a> and paste or upload some links.
+      </div>
+      {% else %}
+      <form action="/batch/download" method="POST" class="space-y-4">
+        <!-- Options bar -->
+        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between rounded-xl border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/60 px-4 py-3">
+          <div class="flex items-center gap-3">
+            <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
+              <input id="select_all" type="checkbox" class="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary" onclick="toggleAll(this)">
+              <span>Select all ({{ videos|length }})</span>
+            </label>
+          </div>
+          <div class="flex flex-wrap gap-4 items-center text-sm">
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="clean_timestamps" checked class="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary">
+              <span class="text-gray-700 dark:text-gray-200">Remove timestamps</span>
+            </label>
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="embed_url" checked class="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary">
+              <span class="text-gray-700 dark:text-gray-200">Embed YouTube link</span>
+            </label>
+            <div class="flex items-center gap-2">
+              <span class="text-gray-700 dark:text-gray-200">Format:</span>
+              <select name="ext" class="text-sm rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+                <option value="md" selected>.md</option>
+                <option value="txt">.txt</option>
+              </select>
+            </div>
+            <button type="submit" class="inline-flex items-center gap-1 rounded-lg px-4 py-2 bg-primary text-white text-sm font-bold hover:bg-primary/90">
+              <span class="material-symbols-outlined text-sm">download</span>
+              <span>Download ZIP</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Hidden field with serialized videos -->
+        <input type="hidden" name="videos_json" value='{{ videos|tojson }}'>
+
+        <!-- Video list -->
+        <div class="mt-4 grid gap-3">
+          {% for v in videos %}
+          <label class="flex items-center gap-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 hover:border-primary/60 dark:hover:border-primary/60 cursor-pointer">
+            <input type="checkbox" name="selected_ids" value="{{ v.id }}" class="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary">
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ v.title }}</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ v.uploader }}</p>
+            </div>
+            {% if v.thumbnail %}
+            <img src="{{ v.thumbnail }}" alt="thumb" class="w-20 h-12 object-cover rounded-md hidden sm:block" loading="lazy">
+            {% endif %}
+          </label>
+          {% endfor %}
+        </div>
+      </form>
+      {% endif %}
+    </div>
+  </main>
+</div>
+
+<script>
+  function toggleAll(master) {
+    const boxes = document.querySelectorAll('input[name="selected_ids"]');
+    boxes.forEach(b => { b.checked = master.checked; });
+  }
+</script>
+</body>
+</html>

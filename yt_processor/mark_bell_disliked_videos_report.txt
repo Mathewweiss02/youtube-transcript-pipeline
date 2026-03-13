@@ -1,0 +1,570 @@
+# Mark Bell Videos Likely to Be Disliked
+
+Target Demographic: 23-year-old male interested in fitness, performance, and self-improvement
+
+Analysis based on content patterns, demographic preferences, and psychographic profiling.
+
+## Summary
+
+- High Dislike Probability: 34 videos
+- Medium Dislike Probability: 57 videos
+- Low Dislike Probability: 8 videos
+- Total: 99 videos
+
+## HIGH DISLIKE PROBABILITY
+
+These videos strongly conflict with the target demographic's interests and values.
+
+### 1. Rewriting the Rules of Hybrid Fitness � Mindset, Motherhood, Making a Champion
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "mother"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 2. Why Hard Training is Sabotaging Your Results
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 3. How Light Pollution Is Sabotaging Your Health And What You Can Do About It - Dr. Max Gulhane
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 4. WARNING: How Barbell Training Risks Sabotaging Your Future Health
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 5. How to Utilize Protein Leveraging to Control Hunger & Lose Weight Ft. Ted Naiman
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 6. Unforgettable Highlights: The Power Project's Top Moments of 2023!
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "mom"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 7. Beyond The Food: How Family Dinners Are Shaping The Future of Families - Shawn Stevenson
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "family"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 8. You MUST Exercise If You Want A Safe Pregnancy - Chelsea Karabin & Andrew Martinez
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "pregnancy"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 9. Preventing Childhood Obesity Through YOUR Diet - Stan Efferding
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "child"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 10. 10 Ways You Are Sabotaging Your Fat Loss ft. @MeatCanyon  || MBPP Ep. 887
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 11. How I Overcame Childhood Bullying @ChrisWillx
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "child"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 12. He Defies the Aging Process With Habits and Intuition - Alain Ngalani || MBPP Ep. 874
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 13. Brad Kearns - Aging Backwards, and Why You May Be Fasting Too Much || MBPP Ep. 784
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 14. How To Have A Family Meeting
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "family"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 15. 11 Rules To Strengthen Family Relationships
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "family"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 16. How to Balance Work, Life, Family & Fitness - DON'T Sacrifice Yourself for Everyone! MBPP EP. 745
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "family"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 17. MBPP EP. 733 - Young & Soon To Be Dads NEED To Know This: Don't Discipline, TEACH Discipline
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "dad"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 18. How Stefi Cohen Handled Feud with Greg Doucette
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Celebrity Gossip:** Celebrity gossip and drama content
+  - Trigger: "feud"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Celebrity gossip lacks educational value for fitness goals
+
+--------------------------------------------------------------------------------
+
+### 19. MBPP EP. 674 - Knees Over Toes Family: No Entertainment For A Year ft. Ben, Alissa & Onyx Patrick
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "family"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 20. MBPP EP. 669 - We Get Addicted to Reality TV Too!
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Celebrity Gossip:** Celebrity gossip and drama content
+  - Trigger: "reality tv"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Celebrity gossip lacks educational value for fitness goals
+
+--------------------------------------------------------------------------------
+
+### 21. Mark Recounts a Stinky Moment Training at ST
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "mom"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 22. MBPP EP. 662 - Out of Retirement and Into Bare Knuckle Fighting ft. Chad Mendes & Amadeo Novella
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "retirement"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 23. Dr. Shawn Baker Debunks Beef Climate Change Claims
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Celebrity Gossip:** Celebrity gossip and drama content
+  - Trigger: "beef"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Celebrity gossip lacks educational value for fitness goals
+
+--------------------------------------------------------------------------------
+
+### 24. Use Fasting & Protein Leveraging to Manage Your Bodyweight
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 25. Coming Out Of Retirement ft. Marc Lobliner
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "retirement"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 26. Pregnancy During The Pandemic ft. Ivor Cummins
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "pregnancy"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 27. Mark Bell's Saturday School EP. 11 - What Is Protein Leveraging?
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 28. Mark Bell's Power Project EP. 331 - Ethan Suplee - Childhood Obesity
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Family Parenting:** Family/parenting content not applicable to single 23-year-old
+  - Trigger: "child"
+  - Severity: HIGH
+
+**Detailed Analysis:**
+- Family/parenting topics don't resonate with single young adults
+
+--------------------------------------------------------------------------------
+
+### 29. Stop Sabotaging Your Sex Life: Secrets Every Man SHOULD Know - Dr. Mohit Khera
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+- **Conspiracy Theories:** Conspiracy theory content lacking scientific basis
+  - Trigger: "secret"
+  - Severity: MEDIUM
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+### 30. Unlock the Secret to Athletic Aging: Stay Fit at Any Age!
+
+**Category:** {video['category']}
+
+**Reasons for dislike:**
+
+- **Aging Health:** Age-related content not relevant to 23-year-old
+  - Trigger: "aging"
+  - Severity: HIGH
+
+- **Conspiracy Theories:** Conspiracy theory content lacking scientific basis
+  - Trigger: "secret"
+  - Severity: MEDIUM
+
+**Detailed Analysis:**
+- Content focuses on age-related issues irrelevant to a 23-year-old
+
+--------------------------------------------------------------------------------
+
+
+## MEDIUM DISLIKE PROBABILITY (57 videos)
+
+These videos may have some value but contain elements that could be off-putting.
+
+### Political Content (19 videos)
+
+- Is Athleticism a Birthright? Mike Israetel's Take Examined
+- Is TRT Right For You? | Anabolic Activities EP. 39
+- Beginner's Blueprint: The Right Way to Start Your Fitness Journey | Anabolic Activities
+- Real Men Don't Cry... Right?
+- How to Trust Yourself to Have ALL the Right Answers ALL the Time || MB Saturday School EP. 37
+  ... and 14 more
+
+### Conspiracy Theories (31 videos)
+
+- Is Big Pharma Helping Us Live Longer or Ripping Us Off?
+- Grip Strength Secrets: Why Most Are Training It Wrong!
+- Breathing Secrets That Will Transform Your Strength Training!
+- Healing Injuries WITHOUT Surgery: Top Recovery Secrets For Athletes
+- 10 Years Without Carbs: @Ketosavage Reveals Keto Secrets for Fat Loss and Longevity
+  ... and 26 more
+
+### Low Effort Content (6 videos)
+
+- Should Women Be In Positions of Power? - Jubilee Reaction
+- Male Loneliness Is On The Rise - Reacting To MoistCr1TiKaL w/ @Chris Williamson
+- Reacting to Johnny Depp vs. Amber Heard Trial
+- MBPP EP. 642 - The Magic In Diet, Reacting to Thomas DeLauer & Layne Norton
+- "Pornography is a Great Way to NOT Seek Women Out for Sex" REACTION
+  ... and 1 more
+
+### Non Fitness (1 videos)
+
+- Mark Bell's Power Project EP. 439 - Video Games and Fitness
+
+
+## LOW DISLIKE PROBABILITY (8 videos)
+
+Borderline cases that might be acceptable under certain conditions.
+
+### The Keto Miracle: A New Hope for Depression, Bipolar and Schizophrenia - Dr. Chris Palmer
+
+**Why borderline:** Heavy mental health topic - valuable if currently struggling, otherwise avoid
+
+
+### Ibogaine Treatment Center To Help With Depression And Trauma
+
+**Why borderline:** Heavy mental health topic - valuable if currently struggling, otherwise avoid
+
+
+### Can Testosterone Replacement Cure Depression?
+
+**Why borderline:** Heavy mental health topic - valuable if currently struggling, otherwise avoid
+
+
+### How PERSPECTIVE Helps You AVOID Depression
+
+**Why borderline:** Heavy mental health topic - valuable if currently struggling, otherwise avoid
+
+
+### Can Cold Plunges Reduce Anxiety and Depression?
+
+**Why borderline:** Heavy mental health topic - valuable if currently struggling, otherwise avoid
+
+
+### Meat Healed My Depression ft. Mikhaila Peterson
+
+**Why borderline:** Heavy mental health topic - valuable if currently struggling, otherwise avoid
+
+
+### Mark Bell's Power Project EP. 391 - We're Already In A Depression ft. Robert Kiyosaki
+
+**Why borderline:** Heavy mental health topic - valuable if currently struggling, otherwise avoid
+
+
+### Mark Bell's Power Project EP. 366 - Help With ADHD PTSD Depression with Sherian Lee
+
+**Why borderline:** Heavy mental health topic - valuable if currently struggling, otherwise avoid
+
+
+
+## Recommendations
+
+1. **Remove HIGH severity videos** - Strong mismatch with interests
+2. **Review MEDIUM severity videos** - Keep if they have unique value
+3. **Consider LOW severity videos** - Depends on current needs/mood
+4. **Focus on core content** - Strength, nutrition, peptides, technique
+
+### Content to Prioritize Instead:
+- Evidence-based training protocols
+- Performance enhancement strategies
+- Nutrition science (not fads)
+- Technique and form improvement
+- Recovery and optimization methods

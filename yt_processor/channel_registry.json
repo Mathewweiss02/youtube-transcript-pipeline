@@ -1,0 +1,155 @@
+{
+  "_comment": "Maps each transcript collection to its YouTube channel. Update channel_url for any unknown channels.",
+  "channels": {
+    "Mark_Bell": {
+      "channel_url": "https://www.youtube.com/@MarkBellsPowerProject",
+      "transcript_dir": "transcripts/Mark_Bell",
+      "raw_dir": "transcripts/Mark_Bell_Raw",
+      "base_name": "MARK BELL",
+      "chunk_pattern": "MARK_BELL_PART_*.md"
+    },
+    "Huberman": {
+      "channel_url": "https://www.youtube.com/@hubermanlab",
+      "transcript_dir": "transcripts/Huberman",
+      "raw_dir": "transcripts/Huberman_Raw",
+      "base_name": "HUBERMAN FULL",
+      "chunk_pattern": "HUBERMAN_FULL_CHUNK_*.md"
+    },
+    "Jay_Campbell": {
+      "channel_url": "https://www.youtube.com/@jaycampbell333",
+      "transcript_dir": "transcripts/Jay_Campbell",
+      "raw_dir": "transcripts/Jay_Campbell_Raw",
+      "base_name": "Jay Campbell",
+      "chunk_pattern": "Jay_Campbell_CONSOLIDATED_PART_*.md",
+      "scan_enabled": false,
+      "update_enabled": false,
+      "note": "Managed by the custom Jay Campbell sidecar/download pipeline, not the generic scanner/updater."
+    },
+    "Hyperarch_Fascia": {
+      "channel_url": "https://www.youtube.com/@HyperarchFasciaTraining",
+      "transcript_dir": "transcripts/Hyperarch_Fascia",
+      "raw_dir": "transcripts/Hyperarch_Fascia_Raw",
+      "base_name": "HYPERARCH FASCIA",
+      "chunk_pattern": "HYPERARCH_FASCIA_PART_*.md"
+    },
+    "Alex_Kikel": {
+      "channel_url": "https://www.youtube.com/@alexkikelTPC",
+      "transcript_dir": "transcripts/Alex_Kikel",
+      "raw_dir": "transcripts/Alex_Kikel_Raw",
+      "base_name": "ALEX KIKEL",
+      "chunk_pattern": "Alex_Kikel_CONSOLIDATED_PART_*.md",
+      "scan_sources": [
+        "Alex_Kikel_CONSOLIDATED_PART_*.md"
+      ]
+    },
+    "Daru_Strong": {
+      "channel_url": "https://www.youtube.com/@DaruStrong1",
+      "transcript_dir": "transcripts/Daru_Strong",
+      "raw_dir": "transcripts/Daru_Strong_Raw",
+      "base_name": "DARU STRONG",
+      "chunk_pattern": "DARU*PART_*.md",
+      "chunk_file_template": "DARU STRONG_PART_{num:02d}.md",
+      "scan_sources": [
+        "DARU STRONG_PART_*.md",
+        "DARU_STRONG_PART_*.md"
+      ]
+    },
+    "Coach_Micah_B": {
+      "channel_url": "https://www.youtube.com/@CoachMicahB",
+      "transcript_dir": "transcripts/Coach_Micah_B",
+      "raw_dir": "transcripts/Coach_Micah_B_Raw",
+      "base_name": "COACH MICAH B",
+      "chunk_pattern": "COACH MICAH B_PART_*.md"
+    },
+    "Combat_Athlete_Physio": {
+      "channel_url": "https://www.youtube.com/@CombatAthletePhysio",
+      "transcript_dir": "transcripts/Combat_Athlete_Physio",
+      "raw_dir": "transcripts/Combat_Athlete_Physio_Raw",
+      "base_name": "COMBAT ATHLETE PHYSIO",
+      "chunk_pattern": "COMBAT ATHLETE PHYSIO_PART_*.md"
+    },
+    "Warrior_Collective": {
+      "channel_url": "https://www.youtube.com/@WarriorCollective",
+      "transcript_dir": "transcripts/Warrior_Collective",
+      "raw_dir": "transcripts/Warrior_Collective_Raw",
+      "base_name": "WARRIOR COLLECTIVE",
+      "chunk_pattern": "WARRIOR COLLECTIVE_PART_*.md"
+    },
+    "Solar_Athlete": {
+      "multi_channel": true,
+      "_note": "Transcripts sourced from multiple channels (Canadian Prepper, etc.)",
+      "channel_url": "https://www.youtube.com/@jurisskribans",
+      "transcript_dir": "transcripts/Solar_Athlete",
+      "raw_dir": "transcripts/Solar_Athlete_Raw",
+      "base_name": "SOLAR ATHLETE",
+      "chunk_pattern": "Solar_Athlete_PART_*.md",
+      "scan_enabled": false,
+      "update_enabled": false,
+      "note": "Topic-curated multi-source library; generic channel scans and appends are not trustworthy."
+    },
+    "Professor_Jiang": {
+      "channel_url": "https://www.youtube.com/@PredictiveHistory",
+      "transcript_dir": "transcripts/Professor_Jiang",
+      "raw_dir": "transcripts/Professor_Jiang_Raw",
+      "base_name": "PROFESSOR JIANG",
+      "chunk_pattern": "PROFESSOR_JIANG_PART_*.md",
+      "scan_sources": [
+        "MERGED_ALL_Prof_JIANG_TRANSCRIPTS_WITH_URLS.md",
+        "PROFESSOR_JIANG_PART_01.md"
+      ],
+      "update_enabled": false,
+      "note": "Legacy mixed-format corpus; scan against the canonical merged-with-URLs file, but do not append generically."
+    },
+    "Alchemical_Science": {
+      "channel_url": "https://www.youtube.com/@AlchemicalScience",
+      "transcript_dir": "transcripts/Alchemical_Science",
+      "raw_dir": "transcripts/Alchemical_Science_Raw",
+      "base_name": "ALCHEMICAL SCIENCE",
+      "chunk_pattern": "ALCHEMICAL_SCIENCE_PART_*.md",
+      "scan_sources": [
+        "ALCHEMICAL_SCIENCE_PART_*.md"
+      ]
+    },
+    "MuayThaiPros": {
+      "channel_url": "https://www.youtube.com/channel/UCT4rADCrNoOL22-jOWQjSRQ",
+      "transcript_dir": "transcripts/MuayThaiPros",
+      "raw_dir": "transcripts/MuayThaiPros_Raw",
+      "base_name": "MUAY THAI PROS",
+      "chunk_pattern": "MuayThaiPros_CONSOLIDATED_PART_*.md"
+    },
+    "Danny_Jones": {
+      "channel_url": "https://www.youtube.com/@Koncrete",
+      "transcript_dir": "transcripts/Danny_Jones",
+      "raw_dir": "transcripts/Danny_Jones_Raw",
+      "base_name": "DANNY JONES PODCAST",
+      "chunk_pattern": "Danny_Jones_PART_*.md",
+      "scan_enabled": false,
+      "update_enabled": false,
+      "note": "Registry placeholder only; transcript folder has not been created yet."
+    },
+    "Julian_Dorey": {
+      "channel_url": "https://www.youtube.com/@JulianDorey",
+      "transcript_dir": "transcripts/Julian_Dorey",
+      "raw_dir": "transcripts/Julian_Dorey_Raw",
+      "base_name": "JULIAN DOREY PODCAST",
+      "chunk_pattern": "Julian_Dorey_PART_*.md",
+      "scan_enabled": false,
+      "update_enabled": false,
+      "note": "Registry placeholder only; transcript folder has not been created yet."
+    },
+    "Scotty_Optimal": {
+      "channel_url": "https://www.youtube.com/@ScottyOptimal",
+      "transcript_dir": "transcripts/Scotty_Optimal",
+      "raw_dir": "transcripts/Scotty_Optimal_Raw",
+      "base_name": "SCOTTY OPTIMAL",
+      "chunk_pattern": "Scotty_Optimal_PART_*.md"
+    },
+    "Walter_Russell": {
+      "channel_url": "https://www.youtube.com/channel/UCyXvJHEW98un9ZthPiauncw",
+      "transcript_dir": "transcripts/Walter_Russell",
+      "raw_dir": "transcripts/Walter_Russell_Raw",
+      "base_name": "WALTER RUSSELL",
+      "chunk_pattern": "WALTER_RUSSELL_PART_*.md"
+    }
+  }
+}

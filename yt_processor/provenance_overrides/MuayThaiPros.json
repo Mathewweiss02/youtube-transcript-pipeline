@@ -1,0 +1,22 @@
+{
+  "ignored_files": [],
+  "ignored_titles": [
+    "Beginner Muay Thai Tips",
+    "Muay Thai Basics",
+    "Muay Thai Academy_ Clinching",
+    "Muay Thai Breakdowns",
+    "General Discussion"
+  ],
+  "bundle_file_overrides": {
+    "MuayThaiPros_CONSOLIDATED_PART_*.md": {
+      "bundle_role": "canonical_chunk",
+      "source_channel_keys": [
+        "muay-thai-pros"
+      ]
+    }
+  },
+  "entries": {},
+  "manual_notes": [
+    "Malformed consolidated markdown includes category headings mixed into transcript content; ignore the known category labels."
+  ]
+}

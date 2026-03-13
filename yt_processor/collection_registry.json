@@ -1,0 +1,527 @@
+{
+  "_comment": "Authoritative collection-first registry for transcript scanning, provenance, and updating.",
+  "schema_version": 1,
+  "collections": {
+    "Mark_Bell": {
+      "collection_key": "Mark_Bell",
+      "display_name": "Mark Bell",
+      "collection_type": "single_channel_appendable",
+      "transcript_dir": "transcripts/Mark_Bell",
+      "raw_dir": "transcripts/Mark_Bell_Raw",
+      "scan_strategy": "inline_urls",
+      "update_strategy": "append",
+      "primary_channel": "mark-bells-power-project",
+      "source_channels": [
+        {
+          "key": "mark-bells-power-project",
+          "name": "Mark Bell's Power Project",
+          "youtube_url": "https://www.youtube.com/@MarkBellsPowerProject",
+          "handle": "MarkBellsPowerProject"
+        }
+      ],
+      "canonical_sources": [
+        "MARK_BELL_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Mark_Bell.json",
+      "base_name": "MARK BELL",
+      "chunk_pattern": "MARK_BELL_PART_*.md",
+      "notes": "Pure inline-URL chunk archive."
+    },
+    "Huberman": {
+      "collection_key": "Huberman",
+      "display_name": "Huberman",
+      "collection_type": "single_channel_curated",
+      "transcript_dir": "transcripts/Huberman",
+      "raw_dir": "transcripts/Huberman_Raw",
+      "scan_strategy": "manifest",
+      "update_strategy": "disabled",
+      "primary_channel": "huberman-lab",
+      "source_channels": [
+        {
+          "key": "huberman-lab",
+          "name": "Huberman Lab",
+          "youtube_url": "https://www.youtube.com/@hubermanlab",
+          "handle": "hubermanlab"
+        }
+      ],
+      "canonical_sources": [
+        "HUBERMAN_FULL_CHUNK_*.md",
+        "HUBERMAN_FULL_PART_*.md",
+        "HUBERMAN_ESSENTIALS_CONSOLIDATED_PART_*.md",
+        "MERGED_Dr_Andy_Galpin_Series.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Huberman.json",
+      "base_name": "HUBERMAN FULL",
+      "chunk_pattern": "HUBERMAN_FULL_CHUNK_*.md",
+      "notes": "Full archive plus curated sub-series bundles; scanner must dedupe by provenance manifest."
+    },
+    "Jay_Campbell": {
+      "collection_key": "Jay_Campbell",
+      "display_name": "Jay Campbell",
+      "collection_type": "manual_only",
+      "transcript_dir": "transcripts/Jay_Campbell",
+      "raw_dir": "transcripts/Jay_Campbell_Raw",
+      "scan_strategy": "manual",
+      "update_strategy": "disabled",
+      "primary_channel": "jay-campbell",
+      "source_channels": [
+        {
+          "key": "jay-campbell",
+          "name": "Jay Campbell",
+          "youtube_url": "https://www.youtube.com/@jaycampbell333",
+          "handle": "jaycampbell333"
+        }
+      ],
+      "legacy_sidecar_slug": "jay-campbell",
+      "legacy_sidecar_source_key": "jay-campbell",
+      "canonical_sources": [
+        "Jay_Campbell_CONSOLIDATED_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Jay_Campbell.json",
+      "manual_reason": "Managed by a custom sidecar/download pipeline; no merged transcript folder currently exists.",
+      "notes": "Keep outside the generic scanner/updater."
+    },
+    "Hyperarch_Fascia": {
+      "collection_key": "Hyperarch_Fascia",
+      "display_name": "Hyperarch Fascia",
+      "collection_type": "single_channel_appendable",
+      "transcript_dir": "transcripts/Hyperarch_Fascia",
+      "raw_dir": "transcripts/Hyperarch_Fascia_Raw",
+      "scan_strategy": "inline_urls",
+      "update_strategy": "append",
+      "primary_channel": "hyperarch-fascia-training",
+      "source_channels": [
+        {
+          "key": "hyperarch-fascia-training",
+          "name": "Hyperarch Fascia Training",
+          "youtube_url": "https://www.youtube.com/@HyperarchFasciaTraining",
+          "handle": "HyperarchFasciaTraining"
+        }
+      ],
+      "canonical_sources": [
+        "HYPERARCH_FASCIA_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Hyperarch_Fascia.json",
+      "base_name": "HYPERARCH FASCIA",
+      "chunk_pattern": "HYPERARCH_FASCIA_PART_*.md",
+      "notes": "Pure channel archive with inline URLs; validate title inflation through audit but keep appendable."
+    },
+    "Alex_Kikel": {
+      "collection_key": "Alex_Kikel",
+      "display_name": "Alex Kikel",
+      "collection_type": "single_channel_curated",
+      "transcript_dir": "transcripts/Alex_Kikel",
+      "raw_dir": "transcripts/Alex_Kikel_Raw",
+      "scan_strategy": "manifest",
+      "update_strategy": "disabled",
+      "primary_channel": "alex-kikel",
+      "source_channels": [
+        {
+          "key": "alex-kikel",
+          "name": "Alex Kikel",
+          "youtube_url": "https://www.youtube.com/@alexkikelTPC",
+          "handle": "alexkikelTPC"
+        }
+      ],
+      "canonical_sources": [
+        "Alex_Kikel_CONSOLIDATED_PART_*.md",
+        "ALEX_KIKEL_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Alex_Kikel.json",
+      "base_name": "ALEX KIKEL",
+      "chunk_pattern": "Alex_Kikel_CONSOLIDATED_PART_*.md",
+      "notes": "Single source channel, but transcript output is topic-curated rather than append-only."
+    },
+    "Daru_Strong": {
+      "collection_key": "Daru_Strong",
+      "display_name": "Daru Strong",
+      "collection_type": "single_channel_appendable",
+      "transcript_dir": "transcripts/Daru_Strong",
+      "raw_dir": "transcripts/Daru_Strong_Raw",
+      "scan_strategy": "inline_urls",
+      "update_strategy": "append",
+      "primary_channel": "daru-strong",
+      "source_channels": [
+        {
+          "key": "daru-strong",
+          "name": "Daru Strong",
+          "youtube_url": "https://www.youtube.com/@DaruStrong1",
+          "handle": "DaruStrong1"
+        }
+      ],
+      "canonical_sources": [
+        "DARU STRONG_PART_*.md",
+        "DARU_STRONG_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Daru_Strong.json",
+      "base_name": "DARU STRONG",
+      "chunk_pattern": "DARU*PART_*.md",
+      "chunk_file_template": "DARU STRONG_PART_{num:02d}.md",
+      "notes": "Pure channel archive with mixed historical naming conventions."
+    },
+    "Coach_Micah_B": {
+      "collection_key": "Coach_Micah_B",
+      "display_name": "Coach Micah B",
+      "collection_type": "single_channel_appendable",
+      "transcript_dir": "transcripts/Coach_Micah_B",
+      "raw_dir": "transcripts/Coach_Micah_B_Raw",
+      "scan_strategy": "inline_urls",
+      "update_strategy": "append",
+      "primary_channel": "coach-micah-b",
+      "source_channels": [
+        {
+          "key": "coach-micah-b",
+          "name": "Coach Micah B",
+          "youtube_url": "https://www.youtube.com/@CoachMicahB",
+          "handle": "CoachMicahB"
+        }
+      ],
+      "canonical_sources": [
+        "COACH MICAH B_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Coach_Micah_B.json",
+      "base_name": "COACH MICAH B",
+      "chunk_pattern": "COACH MICAH B_PART_*.md",
+      "notes": "Pure inline-URL channel archive."
+    },
+    "Combat_Athlete_Physio": {
+      "collection_key": "Combat_Athlete_Physio",
+      "display_name": "Combat Athlete Physio",
+      "collection_type": "single_channel_appendable",
+      "transcript_dir": "transcripts/Combat_Athlete_Physio",
+      "raw_dir": "transcripts/Combat_Athlete_Physio_Raw",
+      "scan_strategy": "inline_urls",
+      "update_strategy": "append",
+      "primary_channel": "combat-athlete-physio",
+      "source_channels": [
+        {
+          "key": "combat-athlete-physio",
+          "name": "Combat Athlete Physio",
+          "youtube_url": "https://www.youtube.com/@CombatAthletePhysio",
+          "handle": "CombatAthletePhysio"
+        }
+      ],
+      "canonical_sources": [
+        "COMBAT ATHLETE PHYSIO_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Combat_Athlete_Physio.json",
+      "base_name": "COMBAT ATHLETE PHYSIO",
+      "chunk_pattern": "COMBAT ATHLETE PHYSIO_PART_*.md",
+      "notes": "Pure inline-URL channel archive."
+    },
+    "Warrior_Collective": {
+      "collection_key": "Warrior_Collective",
+      "display_name": "Warrior Collective",
+      "collection_type": "single_channel_appendable",
+      "transcript_dir": "transcripts/Warrior_Collective",
+      "raw_dir": "transcripts/Warrior_Collective_Raw",
+      "scan_strategy": "inline_urls",
+      "update_strategy": "append",
+      "primary_channel": "warrior-collective",
+      "source_channels": [
+        {
+          "key": "warrior-collective",
+          "name": "Warrior Collective",
+          "youtube_url": "https://www.youtube.com/@WarriorCollective",
+          "handle": "WarriorCollective"
+        }
+      ],
+      "canonical_sources": [
+        "WARRIOR COLLECTIVE_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Warrior_Collective.json",
+      "base_name": "WARRIOR COLLECTIVE",
+      "chunk_pattern": "WARRIOR COLLECTIVE_PART_*.md",
+      "notes": "Pure inline-URL channel archive."
+    },
+    "Solar_Athlete": {
+      "collection_key": "Solar_Athlete",
+      "display_name": "Solar Athlete",
+      "collection_type": "multi_channel_curated",
+      "transcript_dir": "transcripts/Solar_Athlete",
+      "raw_dir": "transcripts/Solar_Athlete_Raw",
+      "scan_strategy": "manifest",
+      "update_strategy": "disabled",
+      "primary_channel": "juris-skribans",
+      "source_channels": [
+        {
+          "key": "juris-skribans",
+          "name": "Juris Skribans",
+          "youtube_url": "https://www.youtube.com/@jurisskribans",
+          "handle": "jurisskribans"
+        },
+        {
+          "key": "external-mixed",
+          "name": "External / Mixed Sources",
+          "youtube_url": "",
+          "handle": ""
+        }
+      ],
+      "legacy_sidecar_slug": "solar-athlete",
+      "legacy_sidecar_source_key": "juris-skribans",
+      "canonical_sources": [
+        "*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Solar_Athlete.json",
+      "base_name": "SOLAR ATHLETE",
+      "chunk_pattern": "Solar_Athlete_PART_*.md",
+      "notes": "Topic-curated, mixed-source library. Must be traced by manifest, never appended generically."
+    },
+    "Professor_Jiang": {
+      "collection_key": "Professor_Jiang",
+      "display_name": "Professor Jiang",
+      "collection_type": "legacy_mixed_format",
+      "transcript_dir": "transcripts/Professor_Jiang",
+      "raw_dir": "transcripts/Professor_Jiang_Raw",
+      "scan_strategy": "manifest",
+      "update_strategy": "disabled",
+      "primary_channel": "predictive-history",
+      "source_channels": [
+        {
+          "key": "predictive-history",
+          "name": "Predictive History",
+          "youtube_url": "https://www.youtube.com/@PredictiveHistory",
+          "handle": "PredictiveHistory"
+        }
+      ],
+      "canonical_sources": [
+        "MERGED_ALL_Prof_JIANG_TRANSCRIPTS_WITH_URLS.md",
+        "PROFESSOR_JIANG_PART_01.md",
+        "MERGED_ALL_Prof_JIANG_TRANSCRIPTS.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Professor_Jiang.json",
+      "base_name": "PROFESSOR JIANG",
+      "chunk_pattern": "PROFESSOR_JIANG_PART_*.md",
+      "notes": "Legacy archive with overlapping merged and part files; scanner must use manifest truth."
+    },
+    "Alchemical_Science": {
+      "collection_key": "Alchemical_Science",
+      "display_name": "Alchemical Science",
+      "collection_type": "single_channel_curated",
+      "transcript_dir": "transcripts/Alchemical_Science",
+      "raw_dir": "transcripts/Alchemical_Science_Raw",
+      "scan_strategy": "manifest",
+      "update_strategy": "disabled",
+      "primary_channel": "alchemical-science",
+      "source_channels": [
+        {
+          "key": "alchemical-science",
+          "name": "Alchemical Science",
+          "youtube_url": "https://www.youtube.com/@AlchemicalScience",
+          "handle": "AlchemicalScience"
+        }
+      ],
+      "canonical_sources": [
+        "ALCHEMICAL_SCIENCE_PART_*.md",
+        "MERGED_ALL_Alchemical_Science.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Alchemical_Science.json",
+      "base_name": "ALCHEMICAL SCIENCE",
+      "chunk_pattern": "ALCHEMICAL_SCIENCE_PART_*.md",
+      "notes": "Single-channel archive with overlapping merged/reference outputs and index files."
+    },
+    "MuayThaiPros": {
+      "collection_key": "MuayThaiPros",
+      "display_name": "Muay Thai Pros",
+      "collection_type": "single_channel_curated",
+      "transcript_dir": "transcripts/MuayThaiPros",
+      "raw_dir": "transcripts/MuayThaiPros_Raw",
+      "scan_strategy": "manifest",
+      "update_strategy": "disabled",
+      "primary_channel": "muay-thai-pros",
+      "source_channels": [
+        {
+          "key": "muay-thai-pros",
+          "name": "Muay Thai Pros",
+          "youtube_url": "https://www.youtube.com/channel/UCT4rADCrNoOL22-jOWQjSRQ",
+          "handle": ""
+        }
+      ],
+      "canonical_sources": [
+        "MuayThaiPros_CONSOLIDATED_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/MuayThaiPros.json",
+      "base_name": "MUAY THAI PROS",
+      "chunk_pattern": "MuayThaiPros_CONSOLIDATED_PART_*.md",
+      "notes": "Single-source collection with malformed consolidated formatting; manifest required before trusting scans."
+    },
+    "Danny_Jones": {
+      "collection_key": "Danny_Jones",
+      "display_name": "Danny Jones",
+      "collection_type": "manual_only",
+      "transcript_dir": "transcripts/Danny_Jones",
+      "raw_dir": "transcripts/Danny_Jones_Raw",
+      "scan_strategy": "manual",
+      "update_strategy": "disabled",
+      "primary_channel": "koncrete",
+      "source_channels": [
+        {
+          "key": "koncrete",
+          "name": "Koncrete",
+          "youtube_url": "https://www.youtube.com/@Koncrete",
+          "handle": "Koncrete"
+        }
+      ],
+      "canonical_sources": [
+        "Danny_Jones_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Danny_Jones.json",
+      "manual_reason": "Registry placeholder only; transcript folder has not been created yet.",
+      "notes": "Do not include in automatic scans."
+    },
+    "Julian_Dorey": {
+      "collection_key": "Julian_Dorey",
+      "display_name": "Julian Dorey",
+      "collection_type": "manual_only",
+      "transcript_dir": "transcripts/Julian_Dorey",
+      "raw_dir": "transcripts/Julian_Dorey_Raw",
+      "scan_strategy": "manual",
+      "update_strategy": "disabled",
+      "primary_channel": "julian-dorey",
+      "source_channels": [
+        {
+          "key": "julian-dorey",
+          "name": "Julian Dorey",
+          "youtube_url": "https://www.youtube.com/@JulianDorey",
+          "handle": "JulianDorey"
+        }
+      ],
+      "canonical_sources": [
+        "Julian_Dorey_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Julian_Dorey.json",
+      "manual_reason": "Registry placeholder only; transcript folder has not been created yet.",
+      "notes": "Do not include in automatic scans."
+    },
+    "Scotty_Optimal": {
+      "collection_key": "Scotty_Optimal",
+      "display_name": "Scotty Optimal",
+      "collection_type": "single_channel_appendable",
+      "transcript_dir": "transcripts/Scotty_Optimal",
+      "raw_dir": "transcripts/Scotty_Optimal_Raw",
+      "scan_strategy": "inline_urls",
+      "update_strategy": "append",
+      "primary_channel": "scotty-optimal",
+      "source_channels": [
+        {
+          "key": "scotty-optimal",
+          "name": "Scotty Optimal",
+          "youtube_url": "https://www.youtube.com/@ScottyOptimal",
+          "handle": "ScottyOptimal"
+        }
+      ],
+      "canonical_sources": [
+        "Scotty_Optimal_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Scotty_Optimal.json",
+      "base_name": "SCOTTY OPTIMAL",
+      "chunk_pattern": "Scotty_Optimal_PART_*.md",
+      "notes": "Pure inline-URL channel archive."
+    },
+    "Walter_Russell": {
+      "collection_key": "Walter_Russell",
+      "display_name": "Walter Russell",
+      "collection_type": "single_channel_appendable",
+      "transcript_dir": "transcripts/Walter_Russell",
+      "raw_dir": "transcripts/Walter_Russell_Raw",
+      "scan_strategy": "inline_urls",
+      "update_strategy": "append",
+      "primary_channel": "walter-russell",
+      "source_channels": [
+        {
+          "key": "walter-russell",
+          "name": "Walter Russell",
+          "youtube_url": "https://www.youtube.com/channel/UCyXvJHEW98un9ZthPiauncw",
+          "handle": ""
+        }
+      ],
+      "canonical_sources": [
+        "WALTER_RUSSELL_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Walter_Russell.json",
+      "base_name": "WALTER RUSSELL",
+      "chunk_pattern": "WALTER_RUSSELL_PART_*.md",
+      "notes": "Pure inline-URL channel archive."
+    },
+    "CIA_INTEL_Chunked": {
+      "collection_key": "CIA_INTEL_Chunked",
+      "display_name": "CIA Intel Chunked",
+      "collection_type": "manual_only",
+      "transcript_dir": "transcripts/CIA_INTEL_Chunked",
+      "raw_dir": "transcripts/CIA_INTEL_Raw",
+      "scan_strategy": "manual",
+      "update_strategy": "disabled",
+      "primary_channel": "",
+      "source_channels": [],
+      "canonical_sources": [
+        "CIA_INTELLIGENCE_TRANSCRIPTS_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/CIA_INTEL_Chunked.json",
+      "manual_reason": "Curated multi-channel intelligence corpus with no single authoritative source channel in yt_processor.",
+      "notes": "Leave outside the generic scan/update pipeline until curated source metadata exists."
+    },
+    "Huberman_Lab": {
+      "collection_key": "Huberman_Lab",
+      "display_name": "Huberman Lab Legacy",
+      "collection_type": "manual_only",
+      "transcript_dir": "transcripts/Huberman_Lab",
+      "scan_strategy": "manual",
+      "update_strategy": "disabled",
+      "primary_channel": "huberman-lab",
+      "source_channels": [
+        {
+          "key": "huberman-lab",
+          "name": "Huberman Lab",
+          "youtube_url": "https://www.youtube.com/@hubermanlab",
+          "handle": "hubermanlab"
+        }
+      ],
+      "canonical_sources": [
+        "*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Huberman_Lab.json",
+      "manual_reason": "Legacy side-folder already conceptually subsumed by the main Huberman collection.",
+      "notes": "Keep visible in audits but outside generic scanning."
+    },
+    "Ken_Wheeler": {
+      "collection_key": "Ken_Wheeler",
+      "display_name": "Ken Wheeler",
+      "collection_type": "manual_only",
+      "transcript_dir": "transcripts/Ken_Wheeler",
+      "raw_dir": "transcripts/Ken_Wheeler_Raw",
+      "scan_strategy": "manual",
+      "update_strategy": "disabled",
+      "primary_channel": "theoria-apophasis",
+      "source_channels": [
+        {
+          "key": "theoria-apophasis",
+          "name": "Theoria Apophasis",
+          "youtube_url": "https://www.youtube.com/@TheoriaApophasis",
+          "handle": "TheoriaApophasis"
+        }
+      ],
+      "canonical_sources": [
+        "KEN_WHEELER_THEORIA_APOPHASIS_PART_*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Ken_Wheeler.json",
+      "manual_reason": "Existing corpus is outside the currently trusted scan/update pipeline and needs validation first.",
+      "notes": "Include in audits, not in generic scans."
+    },
+    "Test_Channel": {
+      "collection_key": "Test_Channel",
+      "display_name": "Test Channel",
+      "collection_type": "manual_only",
+      "transcript_dir": "transcripts/Test_Channel",
+      "scan_strategy": "manual",
+      "update_strategy": "disabled",
+      "primary_channel": "",
+      "source_channels": [],
+      "canonical_sources": [
+        "*.md"
+      ],
+      "provenance_manifest": "yt_processor/provenance_manifests/Test_Channel.json",
+      "manual_reason": "Local test fixture; not a production transcript collection.",
+      "notes": "Exclude from automatic pipeline actions."
+    }
+  }
+}

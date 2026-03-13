@@ -1,0 +1,27 @@
+{
+  "ignored_files": [
+    "INDEX.md"
+  ],
+  "ignored_titles": [],
+  "bundle_file_overrides": {
+    "Solar_Athlete_CONSOLIDATED_PART_*.md": {
+      "bundle_role": "topic_bundle",
+      "source_channel_keys": [
+        "juris-skribans",
+        "external-mixed"
+      ]
+    },
+    "SOLAR_ATHLETE_*.md": {
+      "bundle_role": "topic_bundle",
+      "source_channel_keys": [
+        "juris-skribans",
+        "external-mixed"
+      ]
+    }
+  },
+  "entries": {},
+  "manual_notes": [
+    "This collection is topic-curated and known to contain mixed-source material.",
+    "Unmatched titles should remain unresolved rather than being forced into the Juris Skribans channel."
+  ]
+}

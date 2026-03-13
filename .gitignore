@@ -1,0 +1,38 @@
+# Local tooling and editor state
+.windsurf/
+.tmp.driveupload/
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+
+# Node / frontend build output
+youtuber wiki apps/
+youtuber wiki apps/my-app/node_modules/
+youtuber wiki apps/my-app/.next/
+youtuber wiki apps/my-app/test-results/
+
+# Local secrets
+.env
+.env.*
+
+# Large local transcript corpora and legacy dumps
+transcripts/
+Howdy/
+
+# Generated pipeline artifacts
+yt_processor/reports/
+yt_processor/provenance_manifests/
+
+# Temporary test artifacts
+*.tmp
+*.log
+*_stdout.txt
+*_stderr.txt

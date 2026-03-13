@@ -1,0 +1,24 @@
+{
+  "ignored_files": [
+    "INDEX.md"
+  ],
+  "ignored_titles": [],
+  "bundle_file_overrides": {
+    "Alex_Kikel_CONSOLIDATED_PART_*.md": {
+      "bundle_role": "canonical_chunk",
+      "source_channel_keys": [
+        "alex-kikel"
+      ]
+    },
+    "ALEX_KIKEL_*.md": {
+      "bundle_role": "topic_bundle",
+      "source_channel_keys": [
+        "alex-kikel"
+      ]
+    }
+  },
+  "entries": {},
+  "manual_notes": [
+    "Topic bundles are legitimate transcript sources but must not be treated as append targets."
+  ]
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>YT Processor - History</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0da6f2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101c22",
+                        "status-completed": "#2ECC71",
+                        "status-processing": "#F39C12",
+                        "status-failed": "#E74C3C",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#333333] dark:text-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+    <header class="sticky top-0 z-10 flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-b-[#283339] bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm px-4 sm:px-6 lg:px-8 py-3">
+        <div class="flex items-center gap-4">
+            <div class="size-6 text-primary">
+                <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <path clip-rule="evenodd" d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z" fill="currentColor" fill-rule="evenodd"></path>
+                </svg>
+            </div>
+            <h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">YT Processor</h2>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end items-center gap-8">
+            <div class="flex items-center gap-6">
+                <a class="text-sm font-medium leading-normal text-slate-600 dark:text-slate-300 hover:text-primary" href="/">Home</a>
+                <a class="text-sm font-medium leading-normal text-primary" href="/history">History</a>
+            </div>
+            <a href="/" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                <span class="truncate">Process New Link</span>
+            </a>
+        </div>
+    </header>
+    <main class="flex flex-1">
+        <div class="flex-1 p-6 md:p-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                    <p class="text-3xl lg:text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Processing History</p>
+                </div>
+                <!-- Placeholder for history implementation -->
+                 <div class="text-center py-20">
+                    <div class="inline-block p-5 bg-primary/10 rounded-full">
+                        <span class="material-symbols-outlined text-5xl text-primary">history</span>
+                    </div>
+                    <h3 class="mt-4 text-xl font-bold">Your History is Empty</h3>
+                    <p class="mt-2 text-slate-500 dark:text-slate-400">Start by processing a new YouTube link to see your activity here.</p>
+                    <a href="/" class="mt-6 flex mx-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                        <span class="truncate">Process Your First Link</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

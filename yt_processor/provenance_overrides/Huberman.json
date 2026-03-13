@@ -1,0 +1,36 @@
+{
+  "ignored_files": [
+    "INDEX.md"
+  ],
+  "ignored_titles": [],
+  "bundle_file_overrides": {
+    "HUBERMAN_FULL_CHUNK_*.md": {
+      "bundle_role": "canonical_chunk",
+      "source_channel_keys": [
+        "huberman-lab"
+      ]
+    },
+    "HUBERMAN_FULL_PART_*.md": {
+      "bundle_role": "canonical_chunk",
+      "source_channel_keys": [
+        "huberman-lab"
+      ]
+    },
+    "HUBERMAN_ESSENTIALS_CONSOLIDATED_PART_*.md": {
+      "bundle_role": "topic_bundle",
+      "source_channel_keys": [
+        "huberman-lab"
+      ]
+    },
+    "MERGED_Dr_Andy_Galpin_Series.md": {
+      "bundle_role": "topic_bundle",
+      "source_channel_keys": [
+        "huberman-lab"
+      ]
+    }
+  },
+  "entries": {},
+  "manual_notes": [
+    "The full archive remains the canonical scan source; sub-series bundles should survive as traceable overlap, not extra channel coverage."
+  ]
+}

@@ -10,12 +10,20 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from cost_tracker import CostTracker
-from embedding_generator import EmbeddingGenerator
-from guest_extractor import GuestExtractor
-from pinecone_manager import PineconeManager
-from topic_extractor import TopicExtractor
-from wiki_chunker import TranscriptChunker
+try:
+    from .cost_tracker import CostTracker
+    from .embedding_generator import EmbeddingGenerator
+    from .guest_extractor import GuestExtractor
+    from .pinecone_manager import PineconeManager
+    from .topic_extractor import TopicExtractor
+    from .wiki_chunker import TranscriptChunker
+except ImportError:
+    from cost_tracker import CostTracker
+    from embedding_generator import EmbeddingGenerator
+    from guest_extractor import GuestExtractor
+    from pinecone_manager import PineconeManager
+    from topic_extractor import TopicExtractor
+    from wiki_chunker import TranscriptChunker
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent

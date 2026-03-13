@@ -10,3 +10,4 @@
 - added cross-platform bootstrap scripts
 - added GitHub Actions workflows for offline CI and live YouTube smoke testing
 - documented `pipx` as an alternative install path for CLI users
+- quoted extras installs for cross-shell compatibility and hardened packaged helper modules

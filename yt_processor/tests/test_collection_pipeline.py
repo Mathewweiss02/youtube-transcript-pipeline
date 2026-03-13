@@ -1,4 +1,5 @@
 import sys
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -303,6 +304,18 @@ Transcript body.
                 self.assertIn("yt_processor", str(manifest_path))
         finally:
             cu.configure_runtime_root(original_root)
+
+    def test_build_collection_provenance_module_help_runs(self):
+        result = subprocess.run(
+            [sys.executable, "-m", "yt_processor.build_collection_provenance", "--help"],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+        self.assertIn("--workspace", result.stdout)
 
 
 if __name__ == "__main__":

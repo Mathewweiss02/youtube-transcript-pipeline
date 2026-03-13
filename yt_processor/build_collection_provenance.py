@@ -7,23 +7,10 @@ import argparse
 import datetime as dt
 from pathlib import Path
 
-from collection_utils import (
-    REPO_ROOT,
-    build_bundle_records,
-    build_live_video_index,
-    classify_bundle_role,
-    discover_bundle_files,
-    ensure_output_dirs,
-    extract_candidates_from_bundle,
-    get_bundle_override,
-    load_collection_overrides,
-    load_collection_registry,
-    load_existing_sidecar_entries,
-    normalize_title,
-    resolve_manifest_path,
-    save_json,
-    unique_entries_by_video,
-)
+try:
+    from . import collection_utils as cu
+except ImportError:
+    import collection_utils as cu
 
 
 def parse_args() -> argparse.Namespace:
@@ -37,6 +24,11 @@ def parse_args() -> argparse.Namespace:
         "--include-appendable",
         action="store_true",
         help="Also build manifests for appendable collections when no explicit collection list is provided.",
+    )
+    parser.add_argument(
+        "--workspace",
+        type=Path,
+        help="Workspace root for transcript data, manifests, and collection-relative paths",
     )
     return parser.parse_args()
 
@@ -67,7 +59,7 @@ def _build_aliases(candidate: dict, matched_video: dict | None) -> list[str]:
         cleaned = value.strip()
         if not cleaned:
             continue
-        key = normalize_title(cleaned)
+        key = cu.normalize_title(cleaned)
         if not key or key in seen:
             continue
         aliases.append(cleaned)
@@ -121,7 +113,7 @@ def _build_duplicate_groups(entries: list[dict]) -> dict:
 
 
 def _build_stats(entries: list[dict], unresolved_titles: list[dict], bundle_records: list[dict]) -> dict:
-    unique_videos = unique_entries_by_video(entries)
+    unique_videos = cu.unique_entries_by_video(entries)
     per_source_counts: dict[str, int] = {}
     for entry in unique_videos:
         source_key = entry.get("source_channel_key") or "unknown"
@@ -143,26 +135,26 @@ def _build_stats(entries: list[dict], unresolved_titles: list[dict], bundle_reco
 
 
 def build_manifest_for_collection(collection_key: str, collection: dict) -> dict:
-    overrides = load_collection_overrides(collection_key)
+    overrides = cu.load_collection_overrides(collection_key)
     source_channels = collection.get("source_channels", [])
-    per_source_live, live_by_id, live_by_source_title = build_live_video_index(source_channels)
-    sidecar_entries = load_existing_sidecar_entries(collection.get("legacy_sidecar_slug", ""))
+    per_source_live, live_by_id, live_by_source_title = cu.build_live_video_index(source_channels)
+    sidecar_entries = cu.load_existing_sidecar_entries(collection.get("legacy_sidecar_slug", ""))
     sidecar_source_key = collection.get("legacy_sidecar_source_key", "")
-    bundle_records = build_bundle_records(collection, overrides)
+    bundle_records = cu.build_bundle_records(collection, overrides)
 
     bundle_records_by_name = {Path(record["path"]).name: record for record in bundle_records}
     entries: list[dict] = []
     unresolved_titles: list[dict] = []
 
-    for bundle_path in discover_bundle_files(collection):
+    for bundle_path in cu.discover_bundle_files(collection):
         bundle_record = bundle_records_by_name[bundle_path.name]
         bundle_role = bundle_record["bundle_role"]
         if bundle_role == "reference_only":
             continue
 
-        override = get_bundle_override(bundle_path.name, overrides)
+        override = cu.get_bundle_override(bundle_path.name, overrides)
         default_source_keys = override.get("source_channel_keys") or bundle_record["source_channel_keys"]
-        candidates = extract_candidates_from_bundle(bundle_path, overrides.get("ignored_titles", []))
+        candidates = cu.extract_candidates_from_bundle(bundle_path, overrides.get("ignored_titles", []))
 
         for candidate in candidates:
             entry = {
@@ -172,7 +164,7 @@ def build_manifest_for_collection(collection_key: str, collection: dict) -> dict
                 "url": "",
                 "source_channel_key": "",
                 "collection_key": collection_key,
-                "bundle_file": str(bundle_path.relative_to(REPO_ROOT)),
+                "bundle_file": cu.display_path(bundle_path),
                 "match_method": "",
                 "confidence": "manual_review",
                 "aliases": [],
@@ -257,7 +249,7 @@ def build_manifest_for_collection(collection_key: str, collection: dict) -> dict
                 {
                     "title": candidate["title"],
                     "normalized_title": candidate["normalized_title"],
-                    "bundle_file": str(bundle_path.relative_to(REPO_ROOT)),
+                    "bundle_file": cu.display_path(bundle_path),
                     "candidate_source_keys": lookup_source_keys,
                     "bundle_role": bundle_role,
                     "reason": "ambiguous_match" if matched_candidates else "no_live_match",
@@ -289,8 +281,9 @@ def build_manifest_for_collection(collection_key: str, collection: dict) -> dict
 
 def main() -> int:
     args = parse_args()
-    ensure_output_dirs()
-    collections = load_collection_registry()
+    cu.configure_runtime_root(args.workspace)
+    cu.ensure_output_dirs()
+    collections = cu.load_collection_registry()
 
     if args.collections:
         targets = args.collections
@@ -313,8 +306,8 @@ def main() -> int:
             continue
 
         manifest = build_manifest_for_collection(collection_key, collection)
-        manifest_path = resolve_manifest_path(collection)
-        save_json(manifest_path, manifest)
+        manifest_path = cu.resolve_manifest_path(collection)
+        cu.save_json(manifest_path, manifest)
         print(
             f"{collection_key}: wrote {manifest_path.name} "
             f"({manifest['stats']['unique_matched_videos']} unique videos, "

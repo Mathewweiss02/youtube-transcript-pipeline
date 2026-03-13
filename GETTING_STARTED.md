@@ -113,7 +113,7 @@ Override that with either:
 If you want the OpenAI / Pinecone parts of the broader pipeline:
 
 ```bash
-python -m pip install -e .[vector]
+python -m pip install -e ".[vector]"
 ```
 
 Then configure values from `.env.example`.

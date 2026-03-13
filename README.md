@@ -73,10 +73,11 @@ The workspace is where transcript data, reports, and pending-update files are wr
 
 ## Manual Install
 
-If you do not want to use the bootstrap scripts:
+If you do not want to use the bootstrap scripts, create and activate a virtual environment first:
 
 ```bash
 python -m venv .venv
+source .venv/bin/activate
 python -m pip install -e .
 python -m yt_processor.pipeline_doctor --create-dirs --verify-examples
 ```
@@ -84,7 +85,7 @@ python -m yt_processor.pipeline_doctor --create-dirs --verify-examples
 Optional vector/embedding extras:
 
 ```bash
-python -m pip install -e .[vector]
+python -m pip install -e ".[vector]"
 ```
 
 ## pipx Install

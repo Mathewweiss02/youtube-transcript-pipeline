@@ -10,10 +10,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import transcript_scanner
-import transcript_updater
-from cost_tracker import CostTracker
-from wiki_pipeline import process_channel
+try:
+    from . import transcript_scanner, transcript_updater
+    from .cost_tracker import CostTracker
+    from .wiki_pipeline import process_channel
+except ImportError:
+    import transcript_scanner
+    import transcript_updater
+    from cost_tracker import CostTracker
+    from wiki_pipeline import process_channel
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent

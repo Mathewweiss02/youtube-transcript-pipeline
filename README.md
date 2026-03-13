@@ -87,6 +87,20 @@ Optional vector/embedding extras:
 python -m pip install -e .[vector]
 ```
 
+## pipx Install
+
+If you want the CLI without managing a project-local virtual environment:
+
+```bash
+pipx install .
+```
+
+From GitHub:
+
+```bash
+pipx install git+https://github.com/Mathewweiss02/youtube-transcript-pipeline.git
+```
+
 ## Safe Example Data
 
 The repo ships tiny synthetic examples in:

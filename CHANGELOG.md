@@ -9,3 +9,4 @@
 - improved the updater to preserve successful transcript files and append in source order
 - added cross-platform bootstrap scripts
 - added GitHub Actions workflows for offline CI and live YouTube smoke testing
+- documented `pipx` as an alternative install path for CLI users

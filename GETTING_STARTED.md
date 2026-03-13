@@ -117,3 +117,17 @@ python -m pip install -e .[vector]
 ```
 
 Then configure values from `.env.example`.
+
+## 10. Alternative install with pipx
+
+If you are using the repo as a CLI tool instead of a source checkout, `pipx` is a good fit:
+
+```bash
+pipx install .
+```
+
+Or directly from GitHub:
+
+```bash
+pipx install git+https://github.com/Mathewweiss02/youtube-transcript-pipeline.git
+```
